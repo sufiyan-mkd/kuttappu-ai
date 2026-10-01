@@ -1,0 +1,33 @@
+
+/* kuttappu navbar avatar */
+
+.brand-mark {
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  overflow: hidden;
+  flex: 0 0 42px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  border-radius: 13px;
+  background: #dff7ed;
+  border: 1px solid #b8e5d3;
+  box-shadow: 0 8px 22px rgba(4, 105, 70, 0.14);
+}
+
+.brand-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+html.dark-theme .brand-mark {
+  background: #123e2f !important;
+  border-color: #28634e !important;
+}
+
+html.dark-theme .brand-avatar {
+  filter: none !important;
+}

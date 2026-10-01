@@ -1,0 +1,1879 @@
+/* =========================================================
+   kuttappu ai — lessons page
+   clean / minimal / premium
+   ========================================================= */
+
+.lessons-page {
+  min-height: 100vh;
+  padding-bottom: 70px;
+  background: #f5f9f7;
+  color: #10231c;
+  font-family: inherit;
+}
+
+/* =========================================================
+   header
+   ========================================================= */
+
+.lessons-header {
+  padding: 28px 48px 22px;
+  background: #ffffff;
+  border-bottom: 1px solid #dfe9e5;
+}
+
+.lessons-header-left {
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.lessons-eyebrow {
+  display: inline-block;
+  margin-bottom: 7px;
+  color: #00a878;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+}
+
+.lessons-header h1 {
+  margin: 0;
+  color: #10231c;
+  font-size: 38px;
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+}
+
+.lessons-header p {
+  margin: 9px 0 0;
+  color: #718079;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* =========================================================
+   back button
+   ========================================================= */
+
+.lesson-back-btn {
+  flex-shrink: 0;
+  border: 1px solid #d7e3de;
+  border-radius: 9px;
+  padding: 9px 14px;
+  background: #ffffff;
+  color: #243a31;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.lesson-back-btn:hover {
+  border-color: #00a878;
+  color: #00a878;
+  transform: translateY(-1px);
+}
+
+/* =========================================================
+   main
+   ========================================================= */
+
+.lessons-main {
+  width: min(1180px, calc(100% - 48px));
+  margin: 0 auto;
+  padding-top: 28px;
+}
+
+/* =========================================================
+   level tabs
+   ========================================================= */
+
+.level-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.level-tab {
+  min-height: 76px;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 15px 17px;
+
+  border: 1px solid #dce8e3;
+  border-radius: 14px;
+
+  background: #ffffff;
+  color: #173028;
+
+  text-align: left;
+  font-family: inherit;
+
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.level-tab:hover {
+  border-color: #a9dccc;
+  transform: translateY(-2px);
+}
+
+.level-tab.active {
+  border-color: #00a878;
+  background: #effaf6;
+  box-shadow: 0 8px 24px rgba(0, 168, 120, 0.07);
+}
+
+.level-tab > span {
+  width: 40px;
+  height: 40px;
+
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+
+  border-radius: 11px;
+  background: #f0f5f3;
+
+  font-size: 19px;
+}
+
+.level-tab.active > span {
+  background: #dff6ed;
+}
+
+.level-tab strong {
+  display: block;
+  color: #173028;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: lowercase;
+}
+
+.level-tab small {
+  display: block;
+  margin-top: 4px;
+  color: #819089;
+  font-size: 10px;
+}
+
+/* =========================================================
+   overview
+   ========================================================= */
+
+.lesson-overview {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+
+  margin-bottom: 30px;
+  padding: 28px;
+
+  border: 1px solid #dce8e3;
+  border-radius: 18px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #ffffff 0%,
+      #f0faf6 100%
+    );
+}
+
+.overview-label {
+  display: inline-block;
+  margin-bottom: 8px;
+
+  color: #00a878;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+.lesson-overview h2 {
+  max-width: 680px;
+  margin: 0;
+
+  color: #122920;
+  font-size: 23px;
+  line-height: 1.3;
+  font-weight: 800;
+  letter-spacing: -0.6px;
+}
+
+.lesson-overview p {
+  margin: 8px 0 0;
+  color: #78857f;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.lesson-progress-box {
+  width: 220px;
+  flex-shrink: 0;
+}
+
+.progress-top {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 9px;
+}
+
+.progress-top strong {
+  color: #00a878;
+  font-size: 26px;
+  line-height: 1;
+}
+
+.progress-top span {
+  color: #77857f;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.lesson-progress-bar {
+  width: 100%;
+  height: 7px;
+  overflow: hidden;
+
+  border-radius: 999px;
+  background: #dfeae6;
+}
+
+.lesson-progress-bar > div {
+  height: 100%;
+  border-radius: inherit;
+  background: #00a878;
+  transition: width 0.35s ease;
+}
+
+/* =========================================================
+   toolbar
+   ========================================================= */
+
+.lesson-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 18px;
+}
+
+.lesson-toolbar h2 {
+  margin: 0;
+  color: #132a21;
+  font-size: 20px;
+  line-height: 1.2;
+  font-weight: 800;
+  letter-spacing: -0.4px;
+}
+
+.lesson-toolbar p {
+  margin: 5px 0 0;
+  color: #7b8983;
+  font-size: 11px;
+}
+
+.lesson-search {
+  width: 260px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 0 12px;
+
+  border: 1px solid #d7e4df;
+  border-radius: 10px;
+
+  background: #ffffff;
+}
+
+.lesson-search > span {
+  color: #00a878;
+  font-size: 19px;
+  line-height: 1;
+}
+
+.lesson-search input {
+  width: 100%;
+  min-width: 0;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+  color: #193229;
+
+  font-family: inherit;
+  font-size: 12px;
+}
+
+.lesson-search input::placeholder {
+  color: #9aa7a2;
+}
+
+/* =========================================================
+   lesson cards
+   ========================================================= */
+
+.lessons-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+
+.lesson-card {
+  min-height: 205px;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 20px;
+
+  border: 1px solid #dce8e3;
+  border-radius: 16px;
+
+  background: #ffffff;
+  color: #152b23;
+
+  text-align: left;
+  font-family: inherit;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.lesson-card:hover {
+  border-color: #9fdac9;
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(16, 54, 42, 0.07);
+}
+
+.lesson-card.completed {
+  border-color: #9bd8c5;
+  background: #f9fcfb;
+}
+
+.lesson-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.lesson-card-number {
+  color: #00a878;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.lesson-status {
+  padding: 5px 8px;
+
+  border-radius: 7px;
+
+  background: #f0f5f3;
+  color: #65746d;
+
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.completed-status {
+  background: #e3f7ef;
+  color: #00a878;
+}
+
+.lesson-card-body {
+  flex: 1;
+  padding-top: 23px;
+}
+
+.lesson-card-body h3 {
+  margin: 0;
+
+  color: #152b23;
+  font-size: 17px;
+  line-height: 1.3;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+
+.lesson-card-body p {
+  margin: 8px 0 0;
+
+  color: #788680;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.lesson-card-bottom {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+
+  padding-top: 14px;
+
+  border-top: 1px solid #edf2f0;
+
+  color: #8b9792;
+
+  font-size: 9px;
+  font-weight: 700;
+}
+
+/* =========================================================
+   no lessons
+   ========================================================= */
+
+.no-lessons {
+  padding: 65px 20px;
+
+  border: 1px solid #dce8e3;
+  border-radius: 18px;
+
+  background: #ffffff;
+
+  text-align: center;
+}
+
+.no-lessons > span {
+  font-size: 30px;
+}
+
+.no-lessons h3 {
+  margin: 14px 0 6px;
+  color: #193229;
+  font-size: 18px;
+}
+
+.no-lessons p {
+  margin: 0;
+  color: #7c8984;
+  font-size: 12px;
+}
+
+/* =========================================================
+   lesson detail
+   ========================================================= */
+
+.lesson-detail-page {
+  width: min(1060px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 28px 0 70px;
+}
+
+.lesson-detail-page > .lesson-back-btn {
+  margin-bottom: 18px;
+}
+
+/* =========================================================
+   detail header
+   ========================================================= */
+
+.lesson-detail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+
+  margin-bottom: 20px;
+  padding: 31px;
+
+  border: 1px solid #dce8e3;
+  border-radius: 20px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #ffffff 0%,
+      #effaf6 100%
+    );
+}
+
+.lesson-detail-level {
+  color: #00a878;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+.lesson-detail-header h1 {
+  max-width: 760px;
+  margin: 9px 0 8px;
+
+  color: #10251d;
+  font-size: 31px;
+  line-height: 1.15;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+.lesson-detail-header p {
+  max-width: 700px;
+  margin: 0;
+
+  color: #718079;
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.lesson-number-big {
+  color: rgba(0, 168, 120, 0.12);
+  font-size: 78px;
+  line-height: 1;
+  font-weight: 900;
+}
+
+/* =========================================================
+   lesson flow
+   ========================================================= */
+
+.lesson-flow {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  margin-bottom: 20px;
+  padding: 15px;
+
+  overflow-x: auto;
+
+  border: 1px solid #dce8e3;
+  border-radius: 14px;
+
+  background: #ffffff;
+}
+
+.lesson-flow-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  flex-shrink: 0;
+
+  color: #7d8a84;
+
+  font-size: 9px;
+  font-weight: 800;
+
+  text-transform: lowercase;
+}
+
+.lesson-flow-item span {
+  width: 24px;
+  height: 24px;
+
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: #eef3f1;
+  color: #77847e;
+
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.lesson-flow-item.active {
+  color: #00a878;
+}
+
+.lesson-flow-item.active span {
+  background: #dff7ed;
+  color: #00a878;
+}
+
+.lesson-flow-line {
+  width: 28px;
+  height: 1px;
+
+  flex-shrink: 0;
+
+  background: #dce7e3;
+}
+
+/* =========================================================
+   common section
+   ========================================================= */
+
+.lesson-section {
+  margin-bottom: 18px;
+  padding: 30px;
+
+  border: 1px solid #dce8e3;
+  border-radius: 20px;
+
+  background: #ffffff;
+}
+
+.section-label {
+  margin-bottom: 9px;
+
+  color: #00a878;
+
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 1.2px;
+
+  text-transform: uppercase;
+}
+
+.lesson-section h2 {
+  margin: 0 0 17px;
+
+  color: #10271e;
+
+  font-size: 25px;
+  line-height: 1.2;
+  font-weight: 800;
+
+  letter-spacing: -0.7px;
+}
+
+.lesson-section > p {
+  margin: 0;
+
+  color: #66766e;
+
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+/* =========================================================
+   concept
+   ========================================================= */
+
+.concept-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+
+  margin-top: 20px;
+  padding: 18px;
+
+  border: 1px solid #dceee7;
+  border-radius: 13px;
+
+  background: #f5fbf8;
+}
+
+.concept-card > span {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.concept-card strong {
+  display: block;
+
+  color: #163128;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.concept-card p {
+  margin: 6px 0 0;
+
+  color: #718078;
+
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+/* =========================================================
+   vocabulary
+   ========================================================= */
+
+.vocabulary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 11px;
+}
+
+.vocabulary-card {
+  padding: 16px;
+
+  border: 1px solid #e0e9e5;
+  border-radius: 12px;
+
+  background: #fbfdfc;
+}
+
+.vocabulary-card strong {
+  display: block;
+
+  color: #132d24;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.vocabulary-card span {
+  display: block;
+  margin-top: 6px;
+
+  color: #7b8983;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+/* =========================================================
+   examples
+   ========================================================= */
+
+.examples-list {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.example-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+
+  padding: 13px 14px;
+
+  border-radius: 10px;
+  background: #f6f9f8;
+}
+
+.example-item > span {
+  width: 24px;
+  height: 24px;
+
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: #def6ed;
+  color: #00a878;
+
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.example-item p {
+  margin: 3px 0 0;
+
+  color: #34483f;
+
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+/* =========================================================
+   translation
+   ========================================================= */
+
+.translation-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/*
+  important:
+  translation card uses two columns.
+  this prevents the show/hide button from wrapping
+  into multiple lines.
+*/
+
+.translation-card {
+  width: 100%;
+  min-height: 58px;
+  box-sizing: border-box;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+
+  gap: 18px;
+
+  padding: 13px 16px;
+
+  border: 1px solid #dce7e3;
+  border-radius: 13px;
+
+  background: #ffffff;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.translation-card:hover {
+  border-color: #acdccc;
+  background: #fcfefd;
+}
+
+/* malayalam */
+
+.translation-malayalam {
+  min-width: 0;
+
+  color: #263d34;
+
+  font-size: 14px;
+  line-height: 1.6;
+
+  word-break: break-word;
+}
+
+/* answer area */
+
+.translation-answer-area {
+  min-width: 0;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  white-space: nowrap;
+}
+
+/* arrow */
+
+.translation-arrow {
+  flex-shrink: 0;
+
+  color: #00a878;
+
+  font-size: 17px;
+  font-weight: 800;
+}
+
+/* english answer */
+
+.translation-english {
+  min-width: 0;
+
+  color: #00a878;
+
+  font-size: 13px;
+  line-height: 1.5;
+  font-weight: 700;
+}
+
+/* =========================================================
+   translation buttons
+   ========================================================= */
+
+.translation-card button,
+.translation-show-btn,
+.translation-toggle-btn {
+  width: auto;
+  min-width: 106px;
+  height: 36px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 5px;
+
+  flex-shrink: 0;
+
+  box-sizing: border-box;
+
+  padding: 0 13px;
+
+  border: 1px solid #00a878;
+  border-radius: 8px;
+
+  background: #ffffff;
+  color: #00a878;
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 800;
+
+  line-height: 1;
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  transition:
+    background 0.18s ease,
+    color 0.18s ease,
+    transform 0.18s ease;
+}
+
+.translation-card button:hover,
+.translation-show-btn:hover,
+.translation-toggle-btn:hover {
+  background: #00a878;
+  color: #ffffff;
+}
+
+.translation-card button:active,
+.translation-show-btn:active,
+.translation-toggle-btn:active {
+  transform: scale(0.97);
+}
+
+/*
+  if the button contains separate spans,
+  keep everything on one line.
+*/
+
+.translation-card button span,
+.translation-show-btn span,
+.translation-toggle-btn span {
+  display: inline;
+  white-space: nowrap;
+}
+
+/* =========================================================
+   practice
+   ========================================================= */
+
+.practice-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.practice-question {
+  padding: 17px;
+
+  border: 1px solid #dfe9e5;
+  border-radius: 13px;
+
+  background: #fbfdfc;
+}
+
+.practice-question > strong {
+  display: block;
+
+  color: #1c332a;
+
+  font-size: 13px;
+  line-height: 1.6;
+  font-weight: 700;
+}
+
+.practice-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  margin-top: 13px;
+}
+
+.practice-option {
+  min-height: 34px;
+
+  border: 1px solid #cfe0d9;
+  border-radius: 8px;
+
+  padding: 7px 13px;
+
+  background: #ffffff;
+  color: #334b41;
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.18s ease,
+    background 0.18s ease,
+    color 0.18s ease,
+    transform 0.18s ease;
+}
+
+.practice-option:hover {
+  border-color: #00a878;
+  background: #f2fbf7;
+  color: #00a878;
+}
+
+.practice-option:active {
+  transform: scale(0.98);
+}
+
+.practice-option.correct {
+  border-color: #00a878;
+  background: #e6f8f1;
+  color: #008b65;
+}
+
+.practice-option.wrong {
+  border-color: #e27c7c;
+  background: #fff2f2;
+  color: #c74e4e;
+}
+
+/* practice result */
+
+.practice-result {
+  margin-top: 11px;
+  padding: 10px 12px;
+
+  border-radius: 9px;
+
+  font-size: 11px;
+  line-height: 1.5;
+  font-weight: 700;
+}
+
+.practice-result.correct {
+  background: #e8f8f2;
+  color: #008b65;
+}
+
+.practice-result.wrong {
+  background: #fff1f1;
+  color: #c64f4f;
+}
+
+/* =========================================================
+   speaking
+   ========================================================= */
+
+.speaking-card {
+  width: 100%;
+  box-sizing: border-box;
+
+  display: flex;
+  align-items: center;
+  gap: 15px;
+
+  padding: 18px;
+
+  border: 1px solid #d9e8e2;
+  border-radius: 14px;
+
+  background: #102b22;
+  color: #ffffff;
+
+  text-align: left;
+  font-family: inherit;
+}
+
+.speaking-card-clickable {
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.speaking-card-clickable:hover {
+  background: #0c241d;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 25px rgba(8, 34, 26, 0.12);
+}
+
+.speaking-icon {
+  width: 48px;
+  height: 48px;
+
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+
+  border-radius: 13px;
+
+  background: rgba(0, 168, 120, 0.2);
+
+  font-size: 21px;
+}
+
+.speaking-card-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.speaking-card-content strong {
+  display: block;
+
+  color: #ffffff;
+
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.speaking-card-content p {
+  margin: 5px 0;
+
+  color: #d7e7e1;
+
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.speaking-hint {
+  color: #8fe1c4;
+
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.speaking-arrow {
+  flex-shrink: 0;
+
+  color: #65d5b2;
+
+  font-size: 20px;
+}
+
+/* =========================================================
+   lesson test
+   ========================================================= */
+
+.test-card {
+  padding: 18px;
+
+  border-radius: 15px;
+
+  background: #f4f8f6;
+}
+
+.test-question-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.test-question-block {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 16px;
+
+  border: 1px solid #dce7e3;
+  border-radius: 11px;
+
+  background: #ffffff;
+}
+
+.test-question-block > strong {
+  display: block;
+  width: 100%;
+
+  margin-bottom: 12px;
+
+  color: #20382f;
+  font-size: 14px;
+  line-height: 1.6;
+  font-weight: 700;
+}
+
+.test-answer-area {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.test-answer-input {
+  flex: 1;
+  min-width: 0;
+  height: 38px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #d2e1db;
+  border-radius: 8px;
+
+  outline: none;
+
+  padding: 0 11px;
+
+  background: #ffffff;
+  color: #20382f;
+
+  font-family: inherit;
+  font-size: 12px;
+}
+
+.test-answer-input:focus {
+  border-color: #00a878;
+  box-shadow: 0 0 0 3px rgba(0, 168, 120, 0.08);
+}
+
+.test-answer-btn {
+  width: auto;
+  min-width: 105px;
+  height: 38px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border: 1px solid #00a878;
+  border-radius: 8px;
+
+  background: #ffffff;
+  color: #00a878;
+
+  padding: 0 14px;
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 800;
+
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.test-answer-btn:hover {
+  background: #00a878;
+  color: #ffffff;
+}
+
+.test-feedback {
+  margin-top: 10px;
+  padding: 9px 11px;
+  border-radius: 8px;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.test-feedback.correct {
+  background: #e6f8f1;
+  color: #008b65;
+}
+
+.test-feedback.incorrect {
+  background: #fff1f1;
+  color: #c64e4e;
+}
+/* =========================================================
+   test answer button
+   ========================================================= */
+
+.test-answer-btn {
+  width: auto;
+  min-width: 106px;
+  height: 36px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  box-sizing: border-box;
+
+  border: 1px solid #00a878;
+  border-radius: 8px;
+
+  padding: 0 13px;
+
+  background: #ffffff;
+  color: #00a878;
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 800;
+
+  line-height: 1;
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  transition:
+    background 0.18s ease,
+    color 0.18s ease,
+    transform 0.18s ease;
+}
+
+.test-answer-btn:hover {
+  background: #00a878;
+  color: #ffffff;
+}
+
+.test-answer-btn:active {
+  transform: scale(0.97);
+}
+
+/* =========================================================
+   inline test answer area
+   ========================================================= */
+
+.test-answer-area {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  margin-top: 10px;
+}
+
+.test-answer-input {
+  flex: 1;
+  min-width: 0;
+  height: 38px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #d2e1db;
+  border-radius: 8px;
+
+  outline: none;
+
+  padding: 0 11px;
+
+  background: #ffffff;
+  color: #20382f;
+
+  font-family: inherit;
+  font-size: 12px;
+
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.test-answer-input:focus {
+  border-color: #00a878;
+  box-shadow: 0 0 0 3px rgba(0, 168, 120, 0.08);
+}
+
+.test-answer-input::placeholder {
+  color: #a0aaa5;
+}
+
+.test-check-btn {
+  height: 38px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border: none;
+  border-radius: 8px;
+
+  padding: 0 14px;
+
+  background: #00a878;
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition:
+    background 0.18s ease,
+    transform 0.18s ease;
+}
+
+.test-check-btn:hover {
+  background: #008f68;
+}
+
+.test-check-btn:active {
+  transform: scale(0.97);
+}
+
+/* =========================================================
+   test result
+   ========================================================= */
+
+.test-result {
+  margin-top: 9px;
+  padding: 9px 11px;
+
+  border-radius: 8px;
+
+  font-size: 11px;
+  line-height: 1.5;
+  font-weight: 700;
+}
+
+.test-result.correct {
+  background: #e4f8ef;
+  color: #008c65;
+}
+
+.test-result.wrong {
+  background: #fff0f0;
+  color: #c54d4d;
+}
+
+/* =========================================================
+   multiple choice test
+   ========================================================= */
+
+.test-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  margin-top: 14px;
+}
+
+.test-options button {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  box-sizing: border-box;
+
+  padding: 10px 12px;
+
+  border: 1px solid #d5e3dd;
+  border-radius: 9px;
+
+  background: #ffffff;
+  color: #294239;
+
+  text-align: left;
+  font-family: inherit;
+  font-size: 12px;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.18s ease,
+    background 0.18s ease,
+    color 0.18s ease;
+}
+
+.test-options button:hover {
+  border-color: #00a878;
+  background: #f4fcf9;
+  color: #00a878;
+}
+
+.test-options button > span {
+  width: 24px;
+  height: 24px;
+
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+
+  border-radius: 6px;
+
+  background: #edf4f1;
+  color: #00a878;
+
+  font-size: 9px;
+  font-weight: 800;
+}
+
+/* =========================================================
+   complete lesson
+   ========================================================= */
+
+.lesson-complete-area {
+  display: flex;
+  justify-content: center;
+
+  padding: 20px 0;
+}
+
+.complete-lesson-btn {
+  min-width: 220px;
+  min-height: 46px;
+
+  border: none;
+  border-radius: 11px;
+
+  padding: 0 24px;
+
+  background: #00a878;
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  box-shadow: 0 10px 24px rgba(0, 168, 120, 0.15);
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.complete-lesson-btn:hover {
+  background: #008f68;
+  transform: translateY(-2px);
+  box-shadow: 0 13px 28px rgba(0, 168, 120, 0.18);
+}
+
+.complete-lesson-btn.completed {
+  background: #16382d;
+  box-shadow: none;
+}
+
+/* =========================================================
+   focus states
+   ========================================================= */
+
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid rgba(0, 168, 120, 0.35);
+  outline-offset: 2px;
+}
+
+/* =========================================================
+   tablet
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .lessons-header {
+    padding: 24px;
+  }
+
+  .lessons-main {
+    width: min(100% - 32px, 760px);
+  }
+
+  .lesson-detail-page {
+    width: min(100% - 32px, 760px);
+  }
+
+  .lessons-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .vocabulary-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .lesson-overview {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .lesson-progress-box {
+    width: 100%;
+  }
+}
+
+/* =========================================================
+   mobile
+   ========================================================= */
+
+@media (max-width: 640px) {
+  .lessons-header {
+    padding: 20px 16px;
+  }
+
+  .lessons-header-left {
+    align-items: flex-start;
+  }
+
+  .lessons-header h1 {
+    font-size: 30px;
+  }
+
+  .lessons-main {
+    width: calc(100% - 24px);
+    padding-top: 18px;
+  }
+
+  .lesson-detail-page {
+    width: calc(100% - 24px);
+    padding-top: 18px;
+  }
+
+  .level-tabs {
+    grid-template-columns: 1fr;
+  }
+
+  .lesson-overview {
+    padding: 20px;
+  }
+
+  .lesson-overview h2 {
+    font-size: 20px;
+  }
+
+  .lesson-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .lesson-search {
+    width: auto;
+  }
+
+  .lessons-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .lesson-detail-header {
+    padding: 22px;
+  }
+
+  .lesson-detail-header h1 {
+    font-size: 25px;
+  }
+
+  .lesson-number-big {
+    display: none;
+  }
+
+  .lesson-section {
+    padding: 20px;
+  }
+
+  .lesson-section h2 {
+    font-size: 21px;
+  }
+
+  .vocabulary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* translation mobile */
+
+  .translation-card {
+    grid-template-columns: 1fr;
+    gap: 10px;
+
+    padding: 15px;
+  }
+
+  .translation-answer-area {
+    width: 100%;
+
+    justify-content: flex-start;
+
+    flex-wrap: wrap;
+
+    white-space: normal;
+  }
+
+  .translation-card button,
+  .translation-show-btn,
+  .translation-toggle-btn {
+    min-width: 105px;
+    height: 35px;
+  }
+
+  /* practice */
+
+  .practice-options {
+    flex-direction: column;
+  }
+
+  .practice-option {
+    width: 100%;
+    text-align: left;
+  }
+
+  /* test */
+
+  .test-question-block {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .test-answer-btn {
+    width: 100%;
+  }
+
+  .test-answer-area {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .test-check-btn {
+    width: 100%;
+  }
+
+  /* speaking */
+
+  .speaking-card {
+    align-items: flex-start;
+  }
+
+  .speaking-arrow {
+    display: none;
+  }
+
+  /* flow */
+
+  .lesson-flow {
+    padding: 12px;
+  }
+}
+
+/* =========================================================
+   very small screens
+   ========================================================= */
+
+@media (max-width: 420px) {
+  .lesson-section {
+    padding: 17px;
+    border-radius: 16px;
+  }
+
+  .lesson-detail-header {
+    padding: 18px;
+    border-radius: 16px;
+  }
+
+  .lesson-detail-header h1 {
+    font-size: 22px;
+  }
+
+  .lesson-section h2 {
+    font-size: 19px;
+  }
+
+  .translation-malayalam {
+    font-size: 13px;
+  }
+
+  .translation-english {
+    font-size: 12px;
+  }
+
+  .complete-lesson-btn {
+    width: 100%;
+  }
+}
+.translation-card {
+  width: 100%;
+  min-height: 58px;
+  box-sizing: border-box;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 40px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+
+  padding: 14px 16px;
+
+  border: 1px solid #dce7e3;
+  border-radius: 13px;
+  background: #ffffff;
+}
+
+.translation-malayalam {
+  color: #263d34;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.translation-arrow {
+  color: #00a878;
+  font-size: 17px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.translation-english {
+  color: #00a878;
+  font-size: 14px;
+  line-height: 1.6;
+  font-weight: 700;
+}
+/* translation fix */
+
+.translation-card {
+  width: 100%;
+  min-height: 58px;
+  box-sizing: border-box;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+
+  gap: 16px;
+  padding: 14px 16px;
+
+  border: 1px solid #dce7e3;
+  border-radius: 13px;
+  background: #ffffff;
+}
+
+.translation-malayalam {
+  min-width: 0;
+  color: #20382f;
+  font-size: 14px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.translation-reveal-btn {
+  width: auto !important;
+  min-width: 105px;
+  white-space: nowrap;
+
+  justify-self: center;
+
+  padding: 8px 12px;
+  border: 1px solid #00a878;
+  border-radius: 8px;
+
+  background: #ffffff;
+  color: #008b68;
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.translation-english {
+  min-width: 0;
+  color: #008b68;
+  font-size: 14px;
+  line-height: 1.6;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 700px) {
+  .translation-card {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .translation-reveal-btn {
+    justify-self: start;
+  }
+}
