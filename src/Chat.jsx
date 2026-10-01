@@ -564,7 +564,7 @@ export default function Chat({
         }
 
         const response = await fetch(
-          "http://localhost:5000/api/chat/history",
+          "http://https://kuttappu-ai.onrender.com/api/chat/history",
           {
             method: "GET",
             headers: {
@@ -779,7 +779,7 @@ export default function Chat({
       }
 
       const response = await fetch(
-        "http://localhost:5000/api/chat",
+        "http://https://kuttappu-ai.onrender.com/api/chat",
         {
           method: "POST",
 
