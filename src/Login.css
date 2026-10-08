@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 .auth-page {
   min-height: 100vh;
   width: 100%;
@@ -89,8 +93,9 @@
 
 .auth-card form > button {
   width: 100%;
-  height: 50px;
+  min-height: 50px;
   margin-top: 4px;
+  padding: 0 14px;
   border: none;
   border-radius: 11px;
   background: #20b66b;
@@ -98,15 +103,18 @@
   font-size: 14px;
   font-weight: 800;
   cursor: pointer;
+  transition: background .2s ease, transform .2s ease;
 }
 
 .auth-card form > button:hover {
   background: #159b59;
+  transform: translateY(-1px);
 }
 
 .auth-card form > button:disabled {
   opacity: 0.65;
   cursor: not-allowed;
+  transform: none;
 }
 
 .auth-error {
@@ -117,6 +125,7 @@
   border: 1px solid #ffd5d5;
   color: #c23b3b;
   font-size: 13px;
+  line-height: 1.5;
 }
 
 .auth-switch {
@@ -124,6 +133,7 @@
   text-align: center;
   color: #718078;
   font-size: 13px;
+  line-height: 1.5;
 }
 
 .auth-switch button {
@@ -136,12 +146,102 @@
   padding: 0;
 }
 
+.auth-switch button:focus-visible,
+.auth-card form > button:focus-visible,
+.auth-card input:focus-visible {
+  outline: 2px solid rgba(32, 182, 107, 0.35);
+  outline-offset: 2px;
+}
+
 @media (max-width: 520px) {
+  .auth-page {
+    align-items: flex-start;
+    padding: 20px 14px 30px;
+  }
+
   .auth-card {
+    width: 100%;
     padding: 28px 22px;
+    border-radius: 19px;
+  }
+
+  .auth-logo {
+    margin-bottom: 24px;
+    font-size: 22px;
+  }
+
+  .auth-logo small {
+    font-size: 14px;
   }
 
   .auth-card h1 {
     font-size: 26px;
+    letter-spacing: -0.6px;
+  }
+
+  .auth-subtitle {
+    margin-bottom: 24px;
+    font-size: 13px;
+  }
+
+  .auth-card label {
+    font-size: 12px;
+  }
+
+  .auth-card input {
+    height: 47px;
+    margin-bottom: 15px;
+    font-size: 13px;
+  }
+
+  .auth-card form > button {
+    min-height: 48px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 380px) {
+  .auth-page {
+    padding: 14px 10px 24px;
+  }
+
+  .auth-card {
+    padding: 23px 17px;
+    border-radius: 16px;
+  }
+
+  .auth-logo {
+    margin-bottom: 21px;
+    font-size: 20px;
+  }
+
+  .auth-logo small {
+    font-size: 13px;
+  }
+
+  .auth-card h1 {
+    font-size: 24px;
+  }
+
+  .auth-subtitle {
+    margin: 8px 0 21px;
+    font-size: 12px;
+  }
+
+  .auth-card input {
+    height: 46px;
+  }
+
+  .auth-error {
+    font-size: 12px;
+  }
+
+  .auth-switch {
+    margin-top: 18px;
+    font-size: 12px;
+  }
+
+  .auth-switch button {
+    font-size: 12px;
   }
 }

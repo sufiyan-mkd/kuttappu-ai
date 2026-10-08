@@ -1,334 +1,667 @@
 
+
 /* kuttappu ai — premium global dark theme */
 
+
+
 :root{
+
   --d-bg:#07110e;
+
   --d-surface:#0d1b16;
+
   --d-card:#11231c;
+
   --d-card2:#162b23;
+
   --d-border:#29453a;
+
   --d-text:#f5faf7;
+
   --d-text2:#c2d0c9;
+
   --d-muted:#8ea29a;
+
   --d-green:#08a86d;
+
   --d-green2:#45dda5;
+
   --d-soft:#123e2f;
+
   --d-input:#0a1712;
+
 }
+
+
 
 html.dark-theme,html.dark-theme body,html.dark-theme #root{
+
   background:var(--d-bg)!important;color:var(--d-text)!important;
+
   color-scheme:dark;
+
 }
+
 html.dark-theme .page-shell,
+
 html.dark-theme .chat-page,
+
 html.dark-theme .chat-main,
+
 html.dark-theme .chat-content,
+
 html.dark-theme .chat-messages,
+
 html.dark-theme .practice-page,
+
 html.dark-theme .lessons-page,
+
 html.dark-theme .lesson-detail-page,
+
 html.dark-theme .profile-page,
+
 html.dark-theme .settings-page,
+
 html.dark-theme .progress-page{
+
   background:var(--d-bg)!important;color:var(--d-text)!important;
+
 }
+
+
 
 /* home */
+
 html.dark-theme .topbar{
+
   background:#091712!important;border-color:var(--d-border)!important;
+
 }
+
 html.dark-theme .brand,
+
 html.dark-theme .brand span,
+
 html.dark-theme .nav-links a,
+
 html.dark-theme .nav-links button{
+
   color:var(--d-text)!important;background:transparent!important;
+
 }
+
 html.dark-theme .brand b,
+
 html.dark-theme .eyebrow,
+
 html.dark-theme .section-kicker{
+
   color:var(--d-green2)!important;
+
 }
+
 html.dark-theme .login-button{
+
   background:var(--d-card)!important;color:var(--d-text)!important;
+
   border:1px solid var(--d-border)!important;
+
 }
+
 html.dark-theme .start-button,.dark-theme .nav-start{
+
   background:var(--d-green)!important;color:#fff!important;
+
 }
+
 html.dark-theme .hero-card{
+
   background:linear-gradient(135deg,#10261d,#0d1b16)!important;
+
   border-color:var(--d-border)!important;color:var(--d-text)!important;
+
 }
+
 html.dark-theme .hero-card h1{color:#f7fbf9!important}
+
 html.dark-theme .hero-card h1 span{color:var(--d-green2)!important}
+
 html.dark-theme .hero-description{color:var(--d-text2)!important}
+
 html.dark-theme .trust-line{color:var(--d-muted)!important}
+
 html.dark-theme .learn-section{background:var(--d-bg)!important}
+
 html.dark-theme .learn-section h2,
+
 html.dark-theme .learn-section p{color:var(--d-text)!important}
+
 html.dark-theme .learn-section h2 span{color:var(--d-green2)!important}
+
 html.dark-theme .feature{
+
   background:var(--d-card)!important;border-color:var(--d-border)!important;
+
   color:var(--d-text)!important;
+
 }
+
 html.dark-theme .feature-label{color:var(--d-text2)!important}
+
 html.dark-theme .hero-visual img{filter:none!important;opacity:1!important}
 
+
+
 /* chat */
+
 html.dark-theme .chat-sidebar{
+
   background:#091712!important;border-color:var(--d-border)!important;
+
 }
+
 html.dark-theme .chat-header{background:var(--d-bg)!important}
+
 html.dark-theme .chat-header h1{color:var(--d-text)!important}
+
 html.dark-theme .chat-header p{color:var(--d-muted)!important}
+
 html.dark-theme .chat-nav-item{
+
   background:transparent!important;color:var(--d-text2)!important;
+
 }
+
 html.dark-theme .chat-nav-item:hover{background:#12261e!important;color:#fff!important}
+
 html.dark-theme .chat-nav-item.active{
+
   background:#075b41!important;color:#fff!important;
+
 }
+
 html.dark-theme .chat-tabs,
+
 html.dark-theme .mode-tabs,
+
 html.dark-theme .chat-mode-tabs,
+
 html.dark-theme .chat-toolbar{
+
   background:var(--d-card)!important;border-color:var(--d-border)!important;
+
 }
+
 html.dark-theme .chat-tab,
+
 html.dark-theme .mode-tab{
+
   background:transparent!important;color:var(--d-text2)!important;
+
 }
+
 html.dark-theme .chat-tab.active,
+
 html.dark-theme .mode-tab.active{
+
   background:var(--d-green)!important;color:#fff!important;
+
 }
+
 html.dark-theme .message-card,
+
 html.dark-theme .ai-message,
+
 html.dark-theme .chat-message,
+
 html.dark-theme .message-bubble{
+
   background:var(--d-card)!important;border-color:var(--d-border)!important;
+
   color:var(--d-text)!important;
+
 }
+
 html.dark-theme .message-card strong,
+
 html.dark-theme .ai-message strong,
+
 html.dark-theme .chat-message strong,
+
 html.dark-theme .message-card h1,
+
 html.dark-theme .message-card h2,
+
 html.dark-theme .message-card h3{
+
   color:var(--d-text)!important;
+
 }
+
 html.dark-theme .message-card p,
+
 html.dark-theme .ai-message p,
+
 html.dark-theme .chat-message p{
+
   color:var(--d-text2)!important;
+
 }
+
 html.dark-theme .user-message{
+
   background:#0b513a!important;border-color:#17694d!important;color:#fff!important;
+
 }
+
 html.dark-theme .chat-input-area,
+
 html.dark-theme .chat-input-wrapper{
+
   background:var(--d-bg)!important;border-color:var(--d-border)!important;
+
 }
+
 html.dark-theme .chat-input,
+
 html.dark-theme .chat-input-wrapper input,
+
 html.dark-theme .chat-input-wrapper textarea{
+
   background:var(--d-input)!important;color:#fff!important;
+
   border-color:var(--d-border)!important;
+
 }
+
 html.dark-theme .user-profile-card{
+
   background:var(--d-card)!important;border-color:var(--d-border)!important;color:#fff!important;
+
 }
+
 html.dark-theme .user-profile-card:hover,
+
 html.dark-theme .user-profile-card.open{background:var(--d-card2)!important}
+
 html.dark-theme .user-profile-info strong{color:#fff!important}
+
 html.dark-theme .user-profile-info span{color:var(--d-muted)!important}
+
 html.dark-theme .profile-menu,
+
 html.dark-theme .dropdown-menu,
+
 html.dark-theme .today-tasks-popover{
+
   background:var(--d-card)!important;color:var(--d-text)!important;
+
   border-color:var(--d-border)!important;
+
 }
+
 html.dark-theme .today-task,
+
 html.dark-theme .task-item{
+
   background:#10231b!important;color:var(--d-text)!important;border-color:var(--d-border)!important;
+
 }
+
+
 
 /* lessons */
+
 html.dark-theme .lessons-header{
+
   background:#091712!important;border-color:var(--d-border)!important;
+
 }
+
 html.dark-theme .lessons-header h1{color:var(--d-text)!important}
+
 html.dark-theme .lessons-header p{color:var(--d-muted)!important}
+
 html.dark-theme .lessons-eyebrow{color:var(--d-green2)!important}
+
 html.dark-theme .lesson-back-btn{
+
   background:var(--d-card)!important;color:var(--d-text)!important;border-color:var(--d-border)!important;
+
 }
+
 html.dark-theme .level-tab{
+
   background:var(--d-card)!important;border-color:var(--d-border)!important;color:var(--d-text2)!important;
+
 }
+
 html.dark-theme .level-tab strong{color:var(--d-text)!important}
+
 html.dark-theme .level-tab small{color:var(--d-muted)!important}
+
 html.dark-theme .level-tab.active{
+
   background:#123e2f!important;border-color:var(--d-green)!important;color:#fff!important;
+
 }
+
 html.dark-theme .level-tab.active strong,
+
 html.dark-theme .level-tab.active small{color:#fff!important}
+
 html.dark-theme .lesson-overview{
+
   background:linear-gradient(135deg,#132a21,#0e1e18)!important;
+
   border-color:var(--d-border)!important;color:var(--d-text)!important;
+
 }
+
 html.dark-theme .overview-label,
+
 html.dark-theme .section-label{color:var(--d-green2)!important}
+
 html.dark-theme .lesson-overview h2,
+
 html.dark-theme .lesson-detail-header h1,
+
 html.dark-theme .lesson-section h2,
+
 html.dark-theme .lesson-toolbar h2{
+
   color:var(--d-text)!important;
+
 }
+
 html.dark-theme .lesson-overview p,
+
 html.dark-theme .lesson-detail-header p,
+
 html.dark-theme .lesson-toolbar p{
+
   color:var(--d-text2)!important;
+
 }
+
 html.dark-theme .lesson-progress-bar{background:#294138!important}
+
 html.dark-theme .lesson-progress-bar>div{background:var(--d-green)!important}
+
 html.dark-theme .lesson-search{
+
   background:var(--d-card)!important;border-color:var(--d-border)!important;
+
 }
+
 html.dark-theme .lesson-search input{
+
   background:transparent!important;color:#fff!important;border:0!important;
+
 }
+
 html.dark-theme .lesson-card{
+
   background:#0e1e18!important;border-color:var(--d-border)!important;color:var(--d-text)!important;
+
 }
+
 html.dark-theme .lesson-card:hover{background:#132a21!important}
+
 html.dark-theme .lesson-card-number{color:var(--d-green2)!important}
+
 html.dark-theme .lesson-card-body h3{color:var(--d-text)!important}
+
 html.dark-theme .lesson-card-body p,
+
 html.dark-theme .lesson-card-bottom span{color:var(--d-text2)!important}
+
 html.dark-theme .lesson-card-bottom{border-color:var(--d-border)!important}
+
 html.dark-theme .lesson-status{
+
   background:#e8f0ec!important;color:#087c50!important;
+
 }
+
 html.dark-theme .lesson-flow{
+
   background:var(--d-card)!important;border-color:var(--d-border)!important;
+
 }
+
 html.dark-theme .lesson-flow-item{color:var(--d-muted)!important}
+
 html.dark-theme .lesson-flow-item span{background:#223a30!important;color:var(--d-text2)!important}
+
 html.dark-theme .lesson-flow-item.active,
+
 html.dark-theme .lesson-flow-item.active span{color:var(--d-green2)!important}
+
 html.dark-theme .lesson-flow-line{background:var(--d-border)!important}
+
 html.dark-theme .concept-card,
+
 html.dark-theme .vocabulary-card,
+
 html.dark-theme .example-item,
+
 html.dark-theme .translation-card,
+
 html.dark-theme .practice-question,
+
 html.dark-theme .speaking-card,
+
 html.dark-theme .test-card,
+
 html.dark-theme .test-question-block{
+
   background:var(--d-card)!important;border-color:var(--d-border)!important;color:var(--d-text)!important;
+
 }
+
 html.dark-theme .concept-card strong,
+
 html.dark-theme .vocabulary-card strong,
+
 html.dark-theme .practice-question strong,
+
 html.dark-theme .test-question-block strong,
+
 html.dark-theme .speaking-card strong{
+
   color:var(--d-text)!important;
+
 }
+
 html.dark-theme .concept-card p,
+
 html.dark-theme .vocabulary-card span,
+
 html.dark-theme .example-item p,
+
 html.dark-theme .speaking-card p{color:var(--d-text2)!important}
+
 html.dark-theme .translation-malayalam{color:var(--d-text)!important}
+
 html.dark-theme .translation-english{color:var(--d-green2)!important}
+
 html.dark-theme .translation-reveal-btn{
+
   background:var(--d-soft)!important;color:var(--d-green2)!important;border-color:#216a4e!important;
+
 }
+
 html.dark-theme .practice-option,
+
 html.dark-theme .test-option-btn{
+
   background:#142920!important;border-color:var(--d-border)!important;color:var(--d-text2)!important;
+
 }
+
 html.dark-theme .practice-option:hover,
+
 html.dark-theme .test-option-btn:hover{background:#1b382d!important;color:#fff!important}
+
 html.dark-theme .test-answer-input{
+
   background:var(--d-input)!important;color:#fff!important;border-color:var(--d-border)!important;
+
 }
+
 html.dark-theme .test-answer-btn,
+
 html.dark-theme .complete-lesson-btn{
+
   background:var(--d-green)!important;color:#fff!important;
+
 }
+
+
 
 /* progress */
+
 html.dark-theme .progress-page{
+
   background:radial-gradient(circle at 85% 0%,rgba(0,145,91,.12),transparent 30%),var(--d-bg)!important;
+
 }
+
 html.dark-theme .progress-header h1,
+
 html.dark-theme .progress-daily-copy h2,
+
 html.dark-theme .progress-goal-card h3,
+
 html.dark-theme .progress-activity-card h2{color:var(--d-text)!important}
+
 html.dark-theme .progress-header p,
+
 html.dark-theme .progress-daily-copy p,
+
 html.dark-theme .progress-activity-card p{color:var(--d-muted)!important}
+
 html.dark-theme .progress-daily-card,
+
 html.dark-theme .progress-goal-card,
+
 html.dark-theme .progress-stat-card,
+
 html.dark-theme .progress-activity-card,
+
 html.dark-theme .progress-tasks-card{
+
   background:var(--d-card)!important;border-color:var(--d-border)!important;
+
 }
+
 html.dark-theme .progress-stat-card strong{color:var(--d-text)!important}
+
 html.dark-theme .progress-stat-card span{color:var(--d-muted)!important}
+
 html.dark-theme .progress-bar{background:#263e34!important}
+
 html.dark-theme .progress-circle{background:#0d1b16!important;border-color:#2c4b3f!important}
+
 html.dark-theme .progress-circle strong{color:var(--d-green2)!important}
+
 html.dark-theme .progress-task-row{background:#0d1b16!important;border-color:var(--d-border)!important}
+
 html.dark-theme .progress-task-row strong{color:var(--d-text)!important}
+
 html.dark-theme .progress-task-row span{color:var(--d-muted)!important}
+
 html.dark-theme .progress-task-row b{background:var(--d-soft)!important;color:var(--d-green2)!important}
 
+
+
 /* settings/profile/practice */
+
 html.dark-theme .settings-card,
+
 html.dark-theme .settings-section,
+
 html.dark-theme .profile-card,
+
 html.dark-theme .practice-card,
+
 html.dark-theme .voice-practice-card,
+
 html.dark-theme .practice-result-card,
+
 html.dark-theme .practice-question-card{
+
   background:var(--d-card)!important;border-color:var(--d-border)!important;color:var(--d-text)!important;
+
 }
+
 html.dark-theme .settings-card h1,
+
 html.dark-theme .settings-card h2,
+
 html.dark-theme .settings-card h3,
+
 html.dark-theme .profile-card h1,
+
 html.dark-theme .profile-card h2,
+
 html.dark-theme .profile-card h3,
+
 html.dark-theme .practice-card h1,
+
 html.dark-theme .practice-card h2,
+
 html.dark-theme .practice-card h3{color:var(--d-text)!important}
+
 html.dark-theme .settings-card p,
+
 html.dark-theme .profile-card p,
+
 html.dark-theme .practice-card p{color:var(--d-text2)!important}
 
+
+
 /* all form fields */
+
 html.dark-theme input,
+
 html.dark-theme textarea,
+
 html.dark-theme select{
+
   background:var(--d-input)!important;color:#fff!important;border-color:var(--d-border)!important;
+
 }
+
 html.dark-theme input::placeholder,
+
 html.dark-theme textarea::placeholder{color:#71867c!important}
+
 html.dark-theme option{background:#0d1b16!important;color:#fff!important}
 
+
+
 /* reset password */
+
 html.dark-theme .reset-password-page{background:var(--d-bg)!important}
+
 html.dark-theme .reset-password-card{
+
   background:var(--d-card)!important;border-color:var(--d-border)!important;color:var(--d-text)!important;
+
 }
+
 html.dark-theme .reset-password-card h1{color:var(--d-text)!important}
 
+
+
 /* scrollbar */
+
 html.dark-theme ::-webkit-scrollbar{width:8px;height:8px}
+
 html.dark-theme ::-webkit-scrollbar-track{background:var(--d-bg)}
+
 html.dark-theme ::-webkit-scrollbar-thumb{background:#29463a;border-radius:99px}
+
 html.dark-theme ::-webkit-scrollbar-thumb:hover{background:var(--d-green)}

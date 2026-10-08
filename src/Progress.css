@@ -20,13 +20,11 @@
   margin: 0 auto;
 }
 
-/* back */
-
 .progress-back-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 38px;
+  min-height: 38px;
   padding: 0 16px;
   margin-bottom: 34px;
   border: 1px solid #d7e5dd;
@@ -43,8 +41,6 @@
   border-color: #087c50;
   transform: translateY(-1px);
 }
-
-/* header */
 
 .progress-header {
   position: relative;
@@ -78,8 +74,6 @@
   line-height: 1.6;
 }
 
-/* message */
-
 .progress-message {
   margin: -8px 0 18px;
   padding: 11px 14px;
@@ -89,9 +83,8 @@
   color: #087c50;
   font-size: 12px;
   font-weight: 600;
+  line-height: 1.5;
 }
-
-/* daily */
 
 .progress-daily-card {
   position: relative;
@@ -128,6 +121,7 @@
   position: relative;
   z-index: 1;
   flex: 1;
+  min-width: 0;
 }
 
 .progress-daily-copy h2 {
@@ -143,6 +137,7 @@
   margin: 0 0 20px;
   color: #78847d;
   font-size: 12px;
+  line-height: 1.5;
 }
 
 .progress-bar {
@@ -194,8 +189,6 @@
   letter-spacing: 0.1em;
 }
 
-/* goal */
-
 .progress-goal-card {
   display: flex;
   align-items: center;
@@ -221,6 +214,7 @@
   display: flex;
   align-items: center;
   gap: 7px;
+  flex-shrink: 0;
 }
 
 .progress-goal-controls input {
@@ -241,7 +235,7 @@
 }
 
 .progress-goal-controls button {
-  height: 38px;
+  min-height: 38px;
   padding: 0 16px;
   border: 0;
   border-radius: 9px;
@@ -261,8 +255,6 @@
   opacity: 0.55;
   cursor: wait;
 }
-
-/* stats */
 
 .progress-stats-grid {
   display: grid;
@@ -305,8 +297,6 @@
   font-weight: 600;
   text-transform: lowercase;
 }
-
-/* lower cards */
 
 .progress-activity-card,
 .progress-tasks-card {
@@ -382,8 +372,6 @@
   font-size: 10px;
 }
 
-/* loading / empty */
-
 .progress-loading,
 .progress-empty {
   width: min(1120px, 100%);
@@ -404,7 +392,7 @@
 }
 
 .progress-empty button {
-  height: 38px;
+  min-height: 38px;
   padding: 0 16px;
   border: 0;
   border-radius: 9px;
@@ -413,8 +401,6 @@
   font-weight: 700;
   cursor: pointer;
 }
-
-/* responsive */
 
 @media (max-width: 980px) {
   .progress-page {
@@ -444,10 +430,19 @@
     letter-spacing: -2px;
   }
 
+  .progress-header p {
+    font-size: 12px;
+  }
+
   .progress-daily-card {
     min-height: auto;
     align-items: flex-start;
     padding: 22px;
+    gap: 20px;
+  }
+
+  .progress-daily-copy h2 {
+    font-size: 31px;
   }
 
   .progress-circle {
@@ -461,31 +456,14 @@
     font-size: 20px;
   }
 
+  .progress-circle span {
+    font-size: 8px;
+  }
+
   .progress-goal-card {
     align-items: flex-start;
     flex-direction: column;
-  }
-
-  .progress-stats-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .progress-stat-card {
-    min-height: 105px;
-  }
-}
-
-@media (max-width: 480px) {
-  .progress-daily-card {
-    flex-direction: column;
-  }
-
-  .progress-circle {
-    align-self: flex-end;
-  }
-
-  .progress-stats-grid {
-    grid-template-columns: 1fr;
+    padding: 19px;
   }
 
   .progress-goal-controls {
@@ -494,13 +472,101 @@
 
   .progress-goal-controls input {
     flex: 1;
+    min-width: 0;
   }
 
   .progress-goal-controls button {
     min-width: 90px;
   }
 
+  .progress-stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .progress-stat-card {
+    min-height: 105px;
+    padding: 17px;
+  }
+
+  .progress-stat-card strong {
+    font-size: 28px;
+  }
+
+  .progress-activity-card,
+  .progress-tasks-card {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .progress-page {
+    padding: 18px 11px 38px;
+  }
+
+  .progress-header h1 {
+    font-size: 34px;
+    letter-spacing: -1.5px;
+  }
+
+  .progress-daily-card {
+    flex-direction: column;
+    padding: 19px;
+    border-radius: 16px;
+  }
+
+  .progress-daily-copy h2 {
+    font-size: 28px;
+  }
+
+  .progress-circle {
+    align-self: flex-end;
+    width: 88px;
+    height: 88px;
+    flex-basis: 88px;
+  }
+
+  .progress-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .progress-stat-card {
+    min-height: 92px;
+  }
+
   .progress-task-row {
     align-items: flex-start;
+    gap: 12px;
+  }
+
+  .progress-task-row b {
+    margin-top: 1px;
+  }
+}
+
+@media (max-width: 360px) {
+  .progress-page {
+    padding-left: 9px;
+    padding-right: 9px;
+  }
+
+  .progress-header h1 {
+    font-size: 30px;
+  }
+
+  .progress-daily-card,
+  .progress-goal-card,
+  .progress-activity-card,
+  .progress-tasks-card {
+    padding: 16px;
+  }
+
+  .progress-stat-card {
+    padding: 15px;
+  }
+
+  .progress-goal-controls button {
+    min-width: 82px;
+    padding-left: 12px;
+    padding-right: 12px;
   }
 }

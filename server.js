@@ -1015,6 +1015,134 @@ Rules:
   }
 );
 
+
+
+// =====================================================
+// VOICE TUTOR
+// =====================================================
+
+app.post("/api/voice-tutor", async (req, res) => {
+  try {
+    const {
+      transcript = "",
+      repeatMode = false,
+      targetSentence = "",
+      conversation = [],
+    } = req.body || {};
+
+    const { user, error: authError } = await getAuthenticatedUser(req);
+
+    if (!user || authError) {
+      return res.status(401).json({
+        error: authError || "Authentication required.",
+      });
+    }
+
+    if (!transcript.trim()) {
+      return res.status(400).json({ error: "Transcript is required." });
+    }
+
+    if (!process.env.GEMINI_API_KEY) {
+      return res.status(500).json({ error: "GEMINI_API_KEY is missing." });
+    }
+
+    const safeConversation = Array.isArray(conversation)
+      ? conversation.slice(-10)
+      : [];
+
+    const contextText = safeConversation
+      .map((item) => `${item.role === "kuttappu" ? "Kuttappu" : "Student"}: ${String(item.text || "")}`)
+      .join("\n");
+
+    const prompt = `
+You are Kuttappu, a friendly English speaking tutor for a Malayalam-speaking learner.
+
+The learner is practicing spoken English in a live conversation.
+Your job is to keep the conversation natural while teaching English.
+
+Recent conversation:
+${contextText || "No previous conversation."}
+
+Current learner speech:
+${transcript}
+
+Repeat mode: ${repeatMode ? "yes" : "no"}
+Target sentence to repeat: ${targetSentence || "none"}
+
+Analyze the learner's sentence.
+
+IMPORTANT:
+- Do not punish tiny differences caused by speech recognition.
+- Correct only useful English mistakes.
+- Prefer natural everyday English.
+- If the learner makes a meaningful grammar, word-choice, or sentence-structure mistake, set needsRepeat to true.
+- When needsRepeat is true, correctedSentence must be a natural corrected version and reply must briefly explain the mistake and ask the learner to say the corrected sentence again.
+- When repeatMode is true and the learner is now correct or acceptably close, set needsRepeat to false and encourage them, then continue with a natural follow-up question.
+- If repeatMode is true and the learner is still wrong, keep needsRepeat true.
+- pronunciation is a short learner-friendly pronunciation tip only when the transcript suggests a likely pronunciation problem. Do not invent a problem when there is no evidence.
+- pronunciation feedback is transcript-based; do not claim to have measured audio phonemes.
+- scores are integers from 0 to 100.
+- Keep reply short enough to speak naturally.
+
+Return ONLY valid JSON with exactly this shape:
+{
+  "reply": "short spoken response",
+  "needsRepeat": true,
+  "correction": "short explanation or empty string",
+  "correctedSentence": "correct sentence or empty string",
+  "pronunciation": "short pronunciation tip or empty string",
+  "scores": {
+    "grammar": 0,
+    "fluency": 0,
+    "pronunciation": 0
+  }
+}
+`;
+
+    const result = await ai.models.generateContent({
+      model: "gemini-3.5-flash-lite",
+      contents: prompt,
+      config: {
+        responseMimeType: "application/json",
+      },
+    });
+
+    const raw = result.text || "{}";
+    let parsed;
+
+    try {
+      parsed = JSON.parse(raw);
+    } catch (_) {
+      const match = raw.match(/\{[\s\S]*\}/);
+      parsed = match ? JSON.parse(match[0]) : null;
+    }
+
+    if (!parsed) {
+      return res.status(502).json({ error: "Kuttappu returned an invalid voice response." });
+    }
+
+    const normalized = {
+      reply: String(parsed.reply || "let's keep practicing.").trim(),
+      needsRepeat: Boolean(parsed.needsRepeat),
+      correction: String(parsed.correction || "").trim(),
+      correctedSentence: String(parsed.correctedSentence || "").trim(),
+      pronunciation: String(parsed.pronunciation || "").trim(),
+      scores: {
+        grammar: Math.max(0, Math.min(100, Number(parsed.scores?.grammar) || 0)),
+        fluency: Math.max(0, Math.min(100, Number(parsed.scores?.fluency) || 0)),
+        pronunciation: Math.max(0, Math.min(100, Number(parsed.scores?.pronunciation) || 0)),
+      },
+    };
+
+    return res.json({ result: normalized });
+  } catch (error) {
+    console.error("❌ voice tutor error:", error);
+    return res.status(500).json({
+      error: error?.message || "voice tutor could not generate a response.",
+    });
+  }
+});
+
 // =====================================================
 // START SERVER
 // =====================================================

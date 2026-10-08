@@ -1,558 +1,2426 @@
 
+
+
+
 /* =========================================================
+
+
+
    kuttappu ai — premium home page refinement
+
+
+
    add this AFTER your existing App.css rules
+
+
+
    ========================================================= */
 
+
+
+
+
+
+
 .page-shell {
+
+
+
   min-height: 100vh;
+
+
+
   padding: 0 22px 70px;
+
+
+
   background: #f6faf8;
+
+
+
 }
+
+
+
+
+
+
 
 /* ---------- top navigation ---------- */
 
+
+
+
+
+
+
 .topbar {
+
+
+
   width: min(1280px, 100%);
+
+
+
   height: 78px;
+
+
+
   margin: 0 auto;
+
+
+
   padding: 0 8px;
+
+
+
   display: flex;
+
+
+
   align-items: center;
+
+
+
   justify-content: space-between;
+
+
+
   gap: 28px;
+
+
+
   border-bottom: 1px solid #dce8e3;
+
+
+
   background: rgba(246, 250, 248, .92);
+
+
+
   backdrop-filter: blur(18px);
+
+
+
   position: relative;
+
+
+
   z-index: 10;
+
+
+
 }
+
+
+
+
+
+
 
 .brand {
+
+
+
   display: inline-flex;
+
+
+
   align-items: center;
+
+
+
   gap: 11px;
+
+
+
   border: 0;
+
+
+
   background: transparent;
+
+
+
   color: #10231c;
+
+
+
   font-size: 21px;
+
+
+
   font-weight: 800;
+
+
+
   letter-spacing: -.045em;
+
+
+
   cursor: pointer;
+
+
+
 }
+
+
+
+
+
+
 
 .brand b {
+
+
+
   color: #079b66;
+
+
+
 }
+
+
+
+
+
+
 
 .brand-mark {
+
+
+
   width: 39px;
+
+
+
   height: 39px;
+
+
+
   border-radius: 13px;
+
+
+
   display: grid;
+
+
+
   place-items: center;
+
+
+
   background: linear-gradient(145deg, #d9f8eb, #bdebd8);
+
+
+
   border: 1px solid #a8ddc8;
+
+
+
   box-shadow: 0 8px 22px rgba(4, 105, 70, .12);
+
+
+
 }
+
+
+
+
+
+
 
 .brand-face {
+
+
+
   font-size: 21px;
+
+
+
 }
+
+
+
+
+
+
 
 .nav-links {
+
+
+
   display: flex;
+
+
+
   align-items: center;
+
+
+
   justify-content: center;
+
+
+
   gap: 34px;
+
+
+
   margin-left: auto;
+
+
+
 }
+
+
+
+
+
+
 
 .nav-links a,
+
+
+
 .nav-links button {
+
+
+
   padding: 8px 0;
+
+
+
   border: 0;
+
+
+
   background: transparent;
+
+
+
   color: #61736c;
+
+
+
   font: inherit;
+
+
+
   font-size: 13px;
+
+
+
   font-weight: 650;
+
+
+
   text-decoration: none;
+
+
+
   cursor: pointer;
+
+
+
   transition: color .2s ease;
+
+
+
 }
+
+
+
+
+
+
 
 .nav-links a:hover,
+
+
+
 .nav-links button:hover {
+
+
+
   color: #078e5f;
+
+
+
 }
+
+
+
+
+
+
 
 .nav-actions {
+
+
+
   display: flex;
+
+
+
   align-items: center;
+
+
+
   gap: 10px;
+
+
+
 }
+
+
+
+
+
+
 
 .login-button,
+
+
+
 .nav-start {
+
+
+
   height: 42px;
+
+
+
   border-radius: 11px;
+
+
+
   padding: 0 18px;
+
+
+
   font-size: 12px;
+
+
+
   font-weight: 750;
+
+
+
 }
+
+
+
+
+
+
 
 .login-button {
+
+
+
   border: 1px solid #d6e4de;
+
+
+
   background: #fff;
+
+
+
   color: #243a31;
+
+
+
 }
 
+
+
+
+
+
+
 .nav-start {
+
+
+
   min-width: 137px;
+
+
+
   box-shadow: 0 9px 25px rgba(0, 132, 87, .18);
+
+
+
 }
+
+
+
+
+
+
 
 /* ---------- hero ---------- */
 
+
+
+
+
+
+
 .hero-card {
+
+
+
   width: min(1280px, 100%);
+
+
+
   min-height: 650px;
+
+
+
   margin: 20px auto 0;
+
+
+
   padding: 70px 58px 52px;
+
+
+
   box-sizing: border-box;
+
+
+
   position: relative;
+
+
+
   overflow: hidden;
+
+
+
   display: grid;
+
+
+
   grid-template-columns: minmax(0, 1.08fr) minmax(390px, .92fr);
+
+
+
   align-items: center;
+
+
+
   border: 1px solid #d7e5df;
+
+
+
   border-radius: 28px;
+
+
+
   background:
+
+
+
     radial-gradient(circle at 84% 28%, rgba(13, 179, 119, .12), transparent 25%),
+
+
+
     radial-gradient(circle at 8% 92%, rgba(91, 198, 157, .08), transparent 28%),
+
+
+
     linear-gradient(135deg, #ffffff 0%, #f5fbf8 58%, #edf8f3 100%);
+
+
+
   box-shadow:
+
+
+
     0 25px 70px rgba(16, 54, 42, .08),
+
+
+
     inset 0 1px 0 rgba(255,255,255,.85);
+
+
+
 }
+
+
+
+
+
+
 
 .hero-card::before {
+
+
+
   content: "";
+
+
+
   position: absolute;
+
+
+
   width: 430px;
+
+
+
   height: 430px;
+
+
+
   right: -150px;
+
+
+
   top: -190px;
+
+
+
   border-radius: 50%;
+
+
+
   border: 1px solid rgba(8, 168, 109, .10);
+
+
+
 }
+
+
+
+
+
+
 
 .hero-card::after {
+
+
+
   content: "";
+
+
+
   position: absolute;
+
+
+
   width: 250px;
+
+
+
   height: 250px;
+
+
+
   left: -145px;
+
+
+
   bottom: -155px;
+
+
+
   border-radius: 50%;
+
+
+
   background: rgba(8, 168, 109, .045);
+
+
+
 }
+
+
+
+
+
+
 
 .hero-copy {
+
+
+
   position: relative;
+
+
+
   z-index: 2;
+
+
+
   max-width: 720px;
+
+
+
 }
+
+
+
+
+
+
 
 .eyebrow {
+
+
+
   display: flex;
+
+
+
   align-items: center;
+
+
+
   gap: 10px;
+
+
+
   margin-bottom: 23px;
+
+
+
   color: #078e5f;
+
+
+
   font-size: 11px;
+
+
+
   font-weight: 850;
+
+
+
   letter-spacing: .13em;
+
+
+
 }
+
+
+
+
+
+
 
 .eyebrow-dot {
+
+
+
   width: 8px;
+
+
+
   height: 8px;
+
+
+
   flex: 0 0 auto;
+
+
+
   border-radius: 50%;
+
+
+
   background: #08a86d;
+
+
+
   box-shadow: 0 0 0 6px rgba(8,168,109,.09);
+
+
+
 }
+
+
+
+
+
+
 
 .hero-card h1 {
+
+
+
   margin: 0;
+
+
+
   color: #10231c;
+
+
+
   font-size: clamp(48px, 5.25vw, 76px);
+
+
+
   line-height: .99;
+
+
+
   letter-spacing: -.055em;
+
+
+
   font-weight: 850;
+
+
+
   max-width: 730px;
+
+
+
 }
+
+
+
+
+
+
 
 .hero-card h1 span {
+
+
+
   color: #08a86d;
+
+
+
 }
+
+
+
+
+
+
 
 .hero-description {
+
+
+
   max-width: 610px;
+
+
+
   margin: 29px 0 28px;
+
+
+
   color: #62766d;
+
+
+
   font-size: 16px;
+
+
+
   line-height: 1.7;
+
+
+
   letter-spacing: -.012em;
+
+
+
 }
+
+
+
+
+
+
 
 .hero-start {
+
+
+
   min-width: 190px;
+
+
+
   height: 50px;
+
+
+
   border-radius: 13px;
+
+
+
   font-size: 13px;
+
+
+
   font-weight: 800;
+
+
+
   box-shadow: 0 13px 28px rgba(8,168,109,.2);
+
+
+
 }
+
+
+
+
+
+
 
 .trust-line {
+
+
+
   display: flex;
+
+
+
   align-items: center;
+
+
+
   flex-wrap: wrap;
+
+
+
   gap: 12px;
+
+
+
   margin-top: 18px;
+
+
+
   color: #7a8d85;
+
+
+
   font-size: 11px;
+
+
+
   font-weight: 600;
+
+
+
 }
+
+
+
+
+
+
 
 .trust-line span {
+
+
+
   color: #079d68;
+
+
+
   font-size: 14px;
+
+
+
 }
 
+
+
+
+
+
+
 .trust-line i {
+
+
+
   width: 3px;
+
+
+
   height: 3px;
+
+
+
   border-radius: 50%;
+
+
+
   background: #b8c9c2;
+
+
+
 }
+
+
+
+
+
+
 
 /* ---------- hero artwork ---------- */
 
+
+
+
+
+
+
 .hero-visual {
+
+
+
   min-height: 520px;
+
+
+
   position: relative;
+
+
+
   display: flex;
+
+
+
   align-items: flex-end;
+
+
+
   justify-content: center;
+
+
+
   z-index: 1;
+
+
+
 }
+
+
+
+
+
+
 
 .hero-visual::before {
+
+
+
   content: "";
+
+
+
   position: absolute;
+
+
+
   width: 390px;
+
+
+
   height: 390px;
+
+
+
   right: 45px;
+
+
+
   bottom: 22px;
+
+
+
   border-radius: 50%;
+
+
+
   background: radial-gradient(circle, rgba(8,168,109,.11), rgba(8,168,109,0) 69%);
+
+
+
 }
+
+
+
+
+
+
 
 .hero-visual img {
+
+
+
   width: min(530px, 100%);
+
+
+
   max-height: 575px;
+
+
+
   object-fit: contain;
+
+
+
   object-position: center bottom;
+
+
+
   position: relative;
+
+
+
   z-index: 2;
+
+
+
   filter: drop-shadow(0 26px 28px rgba(14, 44, 34, .13));
+
+
+
   transform: translateY(13px);
+
+
+
   transition: transform .35s ease;
+
+
+
 }
 
+
+
+
+
+
+
 .hero-visual:hover img {
+
+
+
   transform: translateY(5px);
+
+
+
 }
+
+
+
+
+
+
 
 /* ---------- feature grid ---------- */
 
+
+
+
+
+
+
 .feature-grid {
+
+
+
   width: 100%;
+
+
+
   max-width: 740px;
+
+
+
   margin-top: 38px;
+
+
+
   display: grid;
+
+
+
   grid-template-columns: repeat(3, 1fr);
+
+
+
   gap: 10px;
+
+
+
 }
+
+
+
+
+
+
 
 .feature {
+
+
+
   min-height: 70px;
+
+
+
   padding: 12px 13px;
+
+
+
   display: flex;
+
+
+
   align-items: center;
+
+
+
   gap: 11px;
+
+
+
   text-align: left;
+
+
+
   border: 1px solid #dbe8e2;
+
+
+
   border-radius: 14px;
+
+
+
   background: rgba(255,255,255,.72);
+
+
+
   color: #20372e;
+
+
+
   cursor: pointer;
+
+
+
   transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease, background .2s ease;
+
+
+
 }
+
+
+
+
+
+
 
 .feature:hover {
+
+
+
   transform: translateY(-2px);
+
+
+
   border-color: #afdcca;
+
+
+
   background: #fff;
+
+
+
   box-shadow: 0 12px 28px rgba(17, 61, 46, .08);
+
+
+
 }
+
+
+
+
+
+
 
 .feature-icon {
+
+
+
   width: 35px;
+
+
+
   height: 35px;
+
+
+
   flex: 0 0 auto;
+
+
+
   display: grid;
+
+
+
   place-items: center;
+
+
+
   border-radius: 10px;
+
+
+
   background: #e8f7f0;
+
+
+
   color: #078e5f;
+
+
+
   font-size: 14px;
+
+
+
   font-weight: 800;
+
+
+
 }
 
+
+
+
+
+
+
 .feature-label {
+
+
+
   color: #344d43;
+
+
+
   font-size: 10px;
+
+
+
   line-height: 1.35;
+
+
+
   font-weight: 750;
+
+
+
 }
+
+
+
+
+
+
 
 /* ---------- learn section ---------- */
 
+
+
+
+
+
+
 .learn-section {
+
+
+
   width: min(1280px, 100%);
+
+
+
   margin: 72px auto 0;
+
+
+
   padding: 72px 20px 10px;
+
+
+
   text-align: center;
+
+
+
   border-top: 1px solid #dce8e3;
+
+
+
 }
+
+
+
+
+
+
 
 .section-kicker {
+
+
+
   margin: 0 0 11px;
+
+
+
   color: #078e5f;
+
+
+
   font-size: 10px;
+
+
+
   font-weight: 850;
+
+
+
   letter-spacing: .15em;
+
+
+
 }
+
+
+
+
+
+
 
 .learn-section h2 {
+
+
+
   margin: 0;
+
+
+
   color: #10231c;
+
+
+
   font-size: clamp(34px, 4vw, 54px);
+
+
+
   line-height: 1;
+
+
+
   letter-spacing: -.055em;
+
+
+
 }
+
+
+
+
+
+
 
 .learn-section h2 span {
+
+
+
   color: #08a86d;
+
+
+
 }
 
+
+
+
+
+
+
 .section-description {
+
+
+
   margin: 16px auto 25px;
+
+
+
   max-width: 520px;
+
+
+
   color: #72857d;
+
+
+
   font-size: 14px;
+
+
+
   line-height: 1.7;
+
+
+
 }
+
+
+
+
+
+
 
 /* ---------- premium dark version ---------- */
 
+
+
+
+
+
+
 html.dark-theme .page-shell {
+
+
+
   background: #07110e !important;
+
+
+
 }
+
+
+
+
+
+
 
 html.dark-theme .topbar {
+
+
+
   background: rgba(7,17,14,.86) !important;
+
+
+
   border-bottom-color: #1f382f !important;
+
+
+
 }
+
+
+
+
+
+
 
 html.dark-theme .brand-mark {
+
+
+
   background: linear-gradient(145deg,#164735,#103529) !important;
+
+
+
   border-color: #285844 !important;
+
+
+
 }
+
+
+
+
+
+
 
 html.dark-theme .nav-links a,
+
+
+
 html.dark-theme .nav-links button {
+
+
+
   color: #9cafa6 !important;
+
+
+
 }
+
+
+
+
+
+
 
 html.dark-theme .hero-card {
+
+
+
   border-color: #29483c !important;
+
+
+
   background:
+
+
+
     radial-gradient(circle at 78% 20%, rgba(21,190,128,.14), transparent 27%),
+
+
+
     radial-gradient(circle at 7% 92%, rgba(26,121,88,.10), transparent 29%),
+
+
+
     linear-gradient(135deg,#10251d 0%,#0c1b15 62%,#091511 100%) !important;
+
+
+
   box-shadow: 0 30px 80px rgba(0,0,0,.23) !important;
+
+
+
 }
+
+
+
+
+
+
 
 html.dark-theme .hero-card h1 {
+
+
+
   color: #f5faf7 !important;
+
+
+
 }
+
+
+
+
+
+
 
 html.dark-theme .hero-description {
+
+
+
   color: #b6c7bf !important;
+
+
+
 }
+
+
+
+
+
+
 
 html.dark-theme .feature {
+
+
+
   background: rgba(15,34,27,.82) !important;
+
+
+
   border-color: #29483c !important;
+
+
+
 }
+
+
+
+
+
+
 
 html.dark-theme .feature:hover {
+
+
+
   background: #152b23 !important;
+
+
+
   border-color: #3b6855 !important;
+
+
+
 }
+
+
+
+
+
+
 
 html.dark-theme .feature-label {
+
+
+
   color: #c8d6d0 !important;
+
+
+
 }
+
+
+
+
+
+
 
 html.dark-theme .learn-section {
+
+
+
   border-top-color: #1f382f !important;
+
+
+
   background: transparent !important;
+
+
+
 }
+
+
+
+
+
+
 
 html.dark-theme .learn-section h2 {
+
+
+
   color: #f5faf7 !important;
+
+
+
 }
 
+
+
+
+
+
+
 html.dark-theme .section-description {
+
+
+
   color: #8fa39a !important;
+
+
+
 }
+
+
+
+
+
+
 
 /* ---------- responsive ---------- */
 
+
+
+
+
+
+
 @media (max-width: 980px) {
+
+
+
   .topbar {
+
+
+
     height: 70px;
+
+
+
   }
+
+
+
+
+
+
 
   .nav-links {
+
+
+
     gap: 19px;
+
+
+
   }
+
+
+
+
+
+
 
   .hero-card {
+
+
+
     grid-template-columns: 1fr;
+
+
+
     padding: 55px 42px 35px;
+
+
+
   }
+
+
+
+
+
+
 
   .hero-visual {
+
+
+
     min-height: 390px;
+
+
+
     margin-top: 15px;
+
+
+
   }
+
+
+
+
+
+
 
   .hero-visual img {
+
+
+
     max-height: 430px;
+
+
+
   }
 
+
+
+
+
+
+
   .feature-grid {
+
+
+
     max-width: 100%;
+
+
+
   }
+
+
+
 }
+
+
+
+
+
+
 
 @media (max-width: 720px) {
+
+
+
   .page-shell {
+
+
+
     padding: 0 12px 45px;
+
+
+
   }
+
+
+
+
+
+
 
   .topbar {
+
+
+
     gap: 12px;
+
+
+
   }
+
+
+
+
+
+
 
   .nav-links {
+
+
+
     display: none;
+
+
+
   }
+
+
+
+
+
+
 
   .brand {
+
+
+
     font-size: 18px;
+
+
+
   }
+
+
+
+
+
+
 
   .nav-actions {
+
+
+
     margin-left: auto;
+
+
+
   }
+
+
+
+
+
+
 
   .login-button {
+
+
+
     display: none;
+
+
+
   }
+
+
+
+
+
+
 
   .nav-start {
+
+
+
     min-width: auto;
+
+
+
     padding: 0 14px;
+
+
+
   }
+
+
+
+
+
+
 
   .hero-card {
+
+
+
     min-height: auto;
+
+
+
     margin-top: 12px;
+
+
+
     padding: 42px 24px 28px;
+
+
+
     border-radius: 22px;
+
+
+
   }
+
+
+
+
+
+
 
   .hero-card h1 {
+
+
+
     font-size: clamp(42px, 12vw, 60px);
+
+
+
   }
+
+
+
+
+
+
 
   .hero-description {
+
+
+
     font-size: 14px;
+
+
+
   }
+
+
+
+
+
+
 
   .desktop-break {
+
+
+
     display: none;
+
+
+
   }
+
+
+
+
+
+
 
   .feature-grid {
+
+
+
     grid-template-columns: repeat(2, 1fr);
+
+
+
   }
+
+
+
+
+
+
 
   .hero-visual {
+
+
+
     min-height: 320px;
+
+
+
   }
 
+
+
+
+
+
+
   .hero-visual img {
+
+
+
     max-height: 355px;
+
+
+
   }
+
+
+
+
+
+
 
   .learn-section {
+
+
+
     margin-top: 45px;
+
+
+
     padding-top: 48px;
+
+
+
   }
+
+
+
 }
+
+
+
+
+
+
 
 @media (max-width: 460px) {
+
+
+
   .feature-grid {
+
+
+
     grid-template-columns: 1fr;
+
+
+
   }
+
+
+
+
+
+
 
   .feature {
+
+
+
     min-height: 62px;
+
+
+
   }
+
+
+
+
+
+
 
   .hero-visual {
+
+
+
     min-height: 270px;
+
+
+
   }
 
+
+
+
+
+
+
   .hero-visual img {
+
+
+
     max-height: 300px;
+
+
+
   }
+
+
+
 }
+
+
+
+.brand-mark {
+
+
+
+  width: 42px;
+
+
+
+  height: 42px;
+
+
+
+  padding: 0;
+
+
+
+  overflow: hidden;
+
+
+
+  display: flex;
+
+
+
+  align-items: flex-end;
+
+
+
+  justify-content: center;
+
+
+
+  border-radius: 13px;
+
+
+
+  background: #dff7ed;
+
+
+
+  border: 1px solid #b8e5d3;
+
+
+
+  box-shadow: 0 8px 22px rgba(4, 105, 70, 0.14);
+
+
+
+}
+
+
+
+
+
+
+
+.brand-avatar {
+
+
+
+  width: 100%;
+
+
+
+  height: 100%;
+
+
+
+  object-fit: cover;
+
+
+
+  display: block;
+
+
+
+}
+
+
+
+html.dark-theme .brand-mark {
+
+
+
+  background: #123e2f !important;
+
+
+
+  border-color: #28634e !important;
+
+
+
+}
+
+
+
+
+
+
+
+html.dark-theme .brand-avatar {
+
+
+
+  filter: none !important;
+
+
+
+}
+
+/* final home viewport fix */
+
+
+
+@media (min-width: 981px) {
+
+  .hero-card {
+
+    min-height: 590px;
+
+    padding: 52px 48px 42px;
+
+  }
+
+
+
+  .hero-visual {
+
+    min-height: 470px;
+
+  }
+
+
+
+  .hero-visual img {
+
+    max-height: 510px;
+
+  }
+
+
+
+  .feature-grid {
+
+    margin-top: 26px;
+
+  }
+
+}
+
+
+
+@media (max-width: 980px) {
+
+  .hero-card {
+
+    min-height: auto;
+
+  }
+
+}
+
+
+
+@media (max-width: 720px) {
+
+  .hero-card {
+
+    padding: 34px 20px 24px;
+
+  }
+
+
+
+  .hero-card h1 {
+
+    font-size: clamp(38px, 11vw, 54px);
+
+  }
+
+
+
+  .hero-description {
+
+    margin: 20px 0 20px;
+
+    font-size: 13px;
+
+  }
+
+
+
+  .feature-grid {
+
+    margin-top: 22px;
+
+  }
+
+
+
+  .hero-visual {
+
+    min-height: 280px;
+
+  }
+
+
+
+  .hero-visual img {
+
+    max-height: 320px;
+
+  }
+
+}
+
+/* actual kuttappu navbar avatar */
 .brand-mark {
   width: 42px;
   height: 42px;
   padding: 0;
   overflow: hidden;
+  flex: 0 0 42px;
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -562,17 +2430,115 @@ html.dark-theme .section-description {
   box-shadow: 0 8px 22px rgba(4, 105, 70, 0.14);
 }
 
-.brand-avatar {
+.brand-mark .brand-face {
+  display: none;
+}
+
+.brand-mark::before {
+  content: "";
   width: 100%;
   height: 100%;
-  object-fit: cover;
   display: block;
+  background: url("./assets/kuttappu-avatar.png") center bottom / cover no-repeat;
 }
+
 html.dark-theme .brand-mark {
   background: #123e2f !important;
   border-color: #28634e !important;
 }
 
-html.dark-theme .brand-avatar {
-  filter: none !important;
+@media (max-width: 760px) {
+  .brand-mark {
+    width: 34px;
+    height: 34px;
+    flex-basis: 34px;
+    border-radius: 10px;
+  }
+}
+
+@media (max-width: 380px) {
+  .brand-mark {
+    width: 32px;
+    height: 32px;
+    flex-basis: 32px;
+    border-radius: 9px;
+  }
+}
+
+/* final home composition */
+@media (min-width: 981px) {
+  .hero-card {
+    min-height: 590px;
+    padding: 52px 48px 42px;
+  }
+
+  .hero-visual {
+    min-height: 470px;
+  }
+
+  .hero-visual img {
+    max-height: 510px;
+  }
+
+  .feature-grid {
+    margin-top: 26px;
+  }
+}
+
+@media (max-width: 980px) {
+  .hero-card {
+    min-height: auto;
+  }
+}
+
+@media (max-width: 720px) {
+  .hero-card {
+    padding: 34px 20px 24px;
+  }
+
+  .hero-card h1 {
+    font-size: clamp(38px, 11vw, 54px);
+  }
+
+  .hero-description {
+    margin: 20px 0;
+    font-size: 13px;
+  }
+
+  .feature-grid {
+    margin-top: 22px;
+  }
+
+  .hero-visual {
+    min-height: 280px;
+  }
+
+  .hero-visual img {
+    max-height: 320px;
+  }
+}
+
+@media (max-width: 460px) {
+  .brand-mark {
+    width: 32px;
+    height: 32px;
+    flex-basis: 32px;
+  }
+
+  .hero-card {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .hero-card h1 {
+    font-size: clamp(34px, 12vw, 48px);
+  }
+
+  .hero-visual {
+    min-height: 250px;
+  }
+
+  .hero-visual img {
+    max-height: 285px;
+  }
 }
