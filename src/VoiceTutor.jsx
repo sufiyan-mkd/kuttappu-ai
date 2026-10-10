@@ -3,6 +3,8 @@ import "./VoiceTutor.css";
 import kuttappu from "./assets/kuttappu-avatar.png";
 import { supabase } from "./supabase";
 import { trackSpeakingProgress } from "./taskTracker";
+import { Capacitor } from "@capacitor/core";
+import { SpeechRecognition } from "@capacitor-community/speech-recognition";
 
 const API_BASE = "https://kuttappu-ai.onrender.com";
 
@@ -26,13 +28,39 @@ export default function VoiceTutor({ user, onBack }) {
   const busyRef = useRef(false);
   const repeatTargetRef = useRef("");
   const repeatModeRef = useRef(false);
+  const transcriptRef = useRef("");
+  const nativeListenerRefs = useRef([]);
+
+  const isNative = Capacitor.isNativePlatform();
 
   useEffect(() => {
-    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    setSupported(Boolean(SR && window.speechSynthesis));
+    let mounted = true;
+
+    async function initialiseSpeech() {
+      if (Capacitor.isNativePlatform()) {
+        try {
+          const availability = await SpeechRecognition.available();
+          if (mounted) setSupported(Boolean(availability?.available));
+        } catch {
+          if (mounted) setSupported(false);
+        }
+      } else {
+        const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (mounted) setSupported(Boolean(SR && window.speechSynthesis));
+      }
+    }
+
+    initialiseSpeech();
+
     return () => {
+      mounted = false;
       activeRef.current = false;
       try { recognitionRef.current?.stop(); } catch {}
+      if (Capacitor.isNativePlatform()) {
+        SpeechRecognition.stop().catch(() => {});
+        nativeListenerRefs.current.forEach((listener) => listener?.remove?.());
+        nativeListenerRefs.current = [];
+      }
       window.speechSynthesis?.cancel();
     };
   }, []);
@@ -50,10 +78,77 @@ export default function VoiceTutor({ user, onBack }) {
     window.speechSynthesis.speak(utterance);
   }
 
-  function startListening() {
+  async function startListening() {
     if (!activeRef.current || busyRef.current) return;
+
+    if (Capacitor.isNativePlatform()) {
+      try {
+        const permission = await SpeechRecognition.checkPermissions();
+        let receivePermission = permission?.speechRecognition;
+        if (receivePermission !== "granted") {
+          const requested = await SpeechRecognition.requestPermissions();
+          receivePermission = requested?.speechRecognition;
+        }
+        if (receivePermission !== "granted") {
+          setNotice("speech recognition permission is required. allow it in android app settings.");
+          setListening(false);
+          return;
+        }
+
+        transcriptRef.current = "";
+        setTranscript("");
+        setListening(true);
+        setNotice("listening — speak in english");
+
+        // Register listeners once. Android speech recognition returns results through events.
+        if (nativeListenerRefs.current.length === 0) {
+          const partialListener = await SpeechRecognition.addListener("partialResults", (event) => {
+            const match = event?.matches?.[0]?.trim() || "";
+            if (match) {
+              transcriptRef.current = match;
+              setTranscript(match);
+            }
+          });
+
+          const stateListener = await SpeechRecognition.addListener("listeningState", (event) => {
+            if (event?.status !== "stopped") return;
+            setListening(false);
+            const spokenText = transcriptRef.current.trim();
+            if (spokenText && activeRef.current && !busyRef.current) {
+              processSpeech(spokenText);
+            } else if (activeRef.current && !busyRef.current) {
+              window.setTimeout(() => startListening(), 400);
+            }
+          });
+
+          nativeListenerRefs.current = [partialListener, stateListener];
+        }
+
+        await SpeechRecognition.start({
+          language: "en-IN",
+          maxResults: 1,
+          partialResults: true,
+          popup: false,
+        });
+      } catch (error) {
+        setListening(false);
+        const message = String(error?.message || error || "");
+        if (/permission|denied|not allowed/i.test(message)) {
+          setNotice("speech recognition permission is blocked. allow microphone and speech recognition in android settings.");
+        } else {
+          setNotice(`could not start speech recognition: ${message || "please try again"}`);
+        }
+      }
+      return;
+    }
+
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SR) { setSupported(false); setNotice("this browser does not support speech recognition. try chrome or edge."); return; }
+    if (!SR) {
+      setSupported(false);
+      setNotice("speech recognition is not supported in this browser. use chrome or edge.");
+      return;
+    }
+
     try { recognitionRef.current?.stop(); } catch {}
     const recognition = new SR();
     recognitionRef.current = recognition;
@@ -70,7 +165,9 @@ export default function VoiceTutor({ user, onBack }) {
         if (event.results[i].isFinal) finalTranscript += `${value} `;
         else interim += value;
       }
-      setTranscript((finalTranscript || interim).trim());
+      const currentText = (finalTranscript || interim).trim();
+      transcriptRef.current = currentText;
+      setTranscript(currentText);
     };
     recognition.onerror = (event) => {
       setListening(false);
@@ -85,7 +182,7 @@ export default function VoiceTutor({ user, onBack }) {
       setListening(false);
       const text = finalTranscript.trim();
       if (text && activeRef.current && !busyRef.current) processSpeech(text);
-      else if (activeRef.current && !busyRef.current) window.setTimeout(startListening, 250);
+      else if (activeRef.current && !busyRef.current) window.setTimeout(() => startListening(), 250);
     };
     try { recognition.start(); }
     catch (error) { setListening(false); setNotice(error.message || "could not start microphone"); }
@@ -132,7 +229,12 @@ export default function VoiceTutor({ user, onBack }) {
   }
 
   async function startSession() {
-    if (!supported) { setNotice("use chrome or edge and allow microphone access to start voice practice."); return; }
+    if (!supported) {
+      setNotice(isNative
+        ? "speech recognition is unavailable on this android device. check that google speech services are installed and enabled."
+        : "use chrome or edge and allow microphone access to start voice practice.");
+      return;
+    }
     const { data: { session } } = await supabase.auth.getSession();
     if (!session?.access_token) { setNotice("please log in again before starting the voice tutor."); return; }
     activeRef.current = true;
@@ -146,6 +248,9 @@ export default function VoiceTutor({ user, onBack }) {
     activeRef.current = false;
     setActive(false);
     try { recognitionRef.current?.stop(); } catch {}
+    if (Capacitor.isNativePlatform()) {
+      try { await SpeechRecognition.stop(); } catch {}
+    }
     window.speechSynthesis?.cancel();
     setListening(false);
     setNotice("speaking session stopped");
@@ -175,7 +280,10 @@ export default function VoiceTutor({ user, onBack }) {
         <span className="voice-tutor-status">{listening ? "listening to you" : busy ? "checking your english" : active ? "conversation active" : "ready to practise"}</span>
         <h1>{active ? "let's speak english together" : "practise english with kuttappu"}</h1>
         <p className="voice-tutor-intro">speak naturally. kuttappu replies by voice, corrects useful mistakes, and asks you to repeat when needed.</p>
-        {transcript && <div className="heard-card"><span>i heard</span><p>{transcript}</p></div>}
+        <div className={`heard-card ${listening ? "heard-card-listening" : ""}`} aria-live="polite" aria-atomic="true">
+          <span>{listening ? "listening — live transcript" : "your voice transcript"}</span>
+          <p>{transcript || (listening ? "speak now… your words will appear here." : "your recognized words will appear here when you speak.")}</p>
+        </div>
         <div className="voice-coach-reply"><span>kuttappu says</span><p>{reply}</p></div>
         {correction && <div className="correction-card"><span>correction</span><p>{correction}</p></div>}
         {correctedSentence && <div className="repeat-card"><span>say it again</span><strong>{correctedSentence}</strong><button type="button" onClick={repeatCorrectedSentence}>listen &amp; repeat</button></div>}
@@ -183,7 +291,9 @@ export default function VoiceTutor({ user, onBack }) {
         <div className="voice-score-row"><div><b>{scores.grammar}</b><span>grammar</span></div><div><b>{scores.fluency}</b><span>fluency</span></div><div><b>{scores.pronunciation}</b><span>pronunciation</span></div></div>
         <div className="voice-tutor-actions">{!active ? <button type="button" className="voice-primary" onClick={startSession}>start voice conversation</button> : <button type="button" className="voice-stop" onClick={stopSession}>stop conversation</button>}</div>
         {notice && <p className="voice-tutor-notice" role="status">{notice}</p>}
-        {!supported && <p className="voice-tutor-warning">speech recognition is not supported here. open this page in chrome or edge and allow microphone access.</p>}
+        {!supported && <p className="voice-tutor-warning">{isNative
+          ? "speech recognition is unavailable. check that google speech services are installed and enabled on this android device."
+          : "speech recognition is not supported here. open this page in chrome or edge and allow microphone access."}</p>}
       </section>
     </main>
   );

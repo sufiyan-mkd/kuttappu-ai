@@ -11,6 +11,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@capacitor-community/speech-recognition": "^7.0.1",
+    "@capacitor/android": "^8.5.3",
+    "@capacitor/core": "^8.5.3",
     "@google/genai": "^2.24.0",
     "@supabase/supabase-js": "^2.117.2",
     "cors": "^2.8.6",
@@ -21,6 +24,8 @@
     "react-dom": "^19.2.8"
   },
   "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^8.5.3",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.7",
     "@vitejs/plugin-react": "^6.1.1",

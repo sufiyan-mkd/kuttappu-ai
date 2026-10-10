@@ -6,6 +6,10 @@ import kuttappu from "./assets/kuttappu-avatar.png";
 
 import { supabase } from "./supabase";
 
+import { SpeechRecognition } from '@capacitor-community/speech-recognition';
+
+import { Capacitor } from '@capacitor/core';
+
 
 
 import {
@@ -1036,6 +1040,11 @@ export default function Chat({
   const [continuousVoice, setContinuousVoice] = useState(false);
   const [voiceCoach, setVoiceCoach] = useState(false);
   const voiceTranscriptRef = useRef("");
+  const nativePartialListenerRef = useRef(null);
+  const nativeStateListenerRef = useRef(null);
+  const nativeTranscriptActiveRef = useRef(false);
+  const voiceSessionIdRef = useRef(0);
+  const voiceActiveRef = useRef(false);
 
 
 
@@ -1529,34 +1538,180 @@ export default function Chat({
     window.speechSynthesis.speak(utterance);
   }
 
-  function stopListening() {
-    if (recognitionRef.current) {
-      recognitionRef.current.stop();
-    }
-    setIsListening(false);
-    setInterimTranscript("");
+  function removeNativeVoiceListeners() {
+    nativePartialListenerRef.current?.remove();
+    nativeStateListenerRef.current?.remove();
+    nativePartialListenerRef.current = null;
+    nativeStateListenerRef.current = null;
   }
 
-  function startListening() {
-    if (isLoading || typeof window === "undefined") return;
+  function stopListening() {
+    // Invalidate pending permission/start calls so they cannot restart the mic.
+    voiceSessionIdRef.current += 1;
+    voiceActiveRef.current = false;
+    nativeTranscriptActiveRef.current = false;
+    setIsListening(false);
+    setInterimTranscript("");
 
-    const SpeechRecognition =
-      window.SpeechRecognition || window.webkitSpeechRecognition;
-
-    if (!SpeechRecognition) {
-      setVoiceSupported(false);
+    if (Capacitor.isNativePlatform()) {
+      // Ask Android's native recognizer to stop. Do not wait before updating UI.
+      SpeechRecognition.stop()
+        .catch((error) => {
+          console.error("could not stop native speech recognition:", error);
+        })
+        .finally(() => {
+          removeNativeVoiceListeners();
+        });
       return;
     }
 
-    if (isListening) {
+    const recognition = recognitionRef.current;
+    recognitionRef.current = null;
+    if (recognition) {
+      // Detach handlers before abort so an old onend cannot change the new state.
+      recognition.onresult = null;
+      recognition.onerror = null;
+      recognition.onend = null;
+      recognition.onstart = null;
+      try {
+        recognition.abort();
+      } catch (error) {
+        console.error("could not abort browser speech recognition:", error);
+      }
+    }
+  }
+
+  async function startListening() {
+    if (isLoading || typeof window === "undefined") return;
+
+    // Use a ref, not React state, to handle fast taps before React re-renders.
+    if (voiceActiveRef.current) {
       stopListening();
       return;
     }
 
     stopSpeaking();
+    const sessionId = voiceSessionIdRef.current + 1;
+    voiceSessionIdRef.current = sessionId;
+    voiceActiveRef.current = true;
+    nativeTranscriptActiveRef.current = true;
     voiceTranscriptRef.current = "";
+    setInput("");
+    setInterimTranscript("");
+    setIsListening(true); // Show live indication immediately, including permission/start.
 
-    const recognition = new SpeechRecognition();
+    const isCurrentSession = () =>
+      voiceSessionIdRef.current === sessionId && voiceActiveRef.current;
+
+    // Native speech recognition for the installed Android/iOS app.
+    if (Capacitor.isNativePlatform()) {
+      try {
+        const permission = await SpeechRecognition.requestPermissions();
+        if (!isCurrentSession()) return;
+
+        if (permission.speechRecognition !== "granted") {
+          voiceActiveRef.current = false;
+          nativeTranscriptActiveRef.current = false;
+          setVoiceSupported(false);
+          setIsListening(false);
+          setInterimTranscript("microphone permission is required");
+          return;
+        }
+
+        const { available } = await SpeechRecognition.available();
+        if (!isCurrentSession()) return;
+
+        if (!available) {
+          voiceActiveRef.current = false;
+          nativeTranscriptActiveRef.current = false;
+          setVoiceSupported(false);
+          setIsListening(false);
+          setInterimTranscript("speech recognition is unavailable on this device");
+          return;
+        }
+
+        setVoiceSupported(true);
+        await removeNativeVoiceListeners();
+        if (!isCurrentSession()) return;
+
+        nativePartialListenerRef.current = await SpeechRecognition.addListener(
+          "partialResults",
+          (event) => {
+            if (!isCurrentSession() || !nativeTranscriptActiveRef.current) return;
+            const transcript = event.matches?.[0]?.trim() || "";
+            if (!transcript) return;
+            // Android partial results are usually cumulative: replace, don't append.
+            voiceTranscriptRef.current = transcript;
+            setInput(transcript);
+            setInterimTranscript(transcript);
+          }
+        );
+
+        nativeStateListenerRef.current = await SpeechRecognition.addListener(
+          "listeningState",
+          (event) => {
+            if (voiceSessionIdRef.current !== sessionId) return;
+            if (event.status === "started") {
+              voiceActiveRef.current = true;
+              setIsListening(true);
+              setInterimTranscript(voiceTranscriptRef.current || "speak now");
+              return;
+            }
+            if (event.status !== "stopped") return;
+
+            voiceActiveRef.current = false;
+            nativeTranscriptActiveRef.current = false;
+            setIsListening(false);
+            setInterimTranscript("");
+            const transcript = voiceTranscriptRef.current.trim();
+            removeNativeVoiceListeners();
+            if (transcript) setInput(transcript);
+          }
+        );
+
+        if (!isCurrentSession()) {
+          removeNativeVoiceListeners();
+          return;
+        }
+
+        await SpeechRecognition.start({
+          language: "en-IN",
+          maxResults: 1,
+          partialResults: true,
+          popup: false,
+        });
+
+        // The state event may arrive before or after this promise resolves.
+        if (isCurrentSession()) {
+          setIsListening(true);
+          setInterimTranscript(voiceTranscriptRef.current || "speak now");
+        }
+      } catch (error) {
+        if (voiceSessionIdRef.current === sessionId) {
+          voiceActiveRef.current = false;
+          nativeTranscriptActiveRef.current = false;
+          setIsListening(false);
+          setInterimTranscript("");
+          removeNativeVoiceListeners();
+        }
+        console.error("native speech recognition error:", error);
+      }
+      return;
+    }
+
+    // Browser speech recognition for supported desktop/mobile browsers.
+    const BrowserSpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (!BrowserSpeechRecognition) {
+      voiceActiveRef.current = false;
+      setVoiceSupported(false);
+      setIsListening(false);
+      setInterimTranscript("speech recognition is not supported here");
+      return;
+    }
+
+    const recognition = new BrowserSpeechRecognition();
     recognitionRef.current = recognition;
     recognition.continuous = true;
     recognition.interimResults = true;
@@ -1564,16 +1719,16 @@ export default function Chat({
     recognition.maxAlternatives = 1;
 
     recognition.onstart = () => {
+      if (!isCurrentSession()) return;
       setIsListening(true);
-      setInterimTranscript("");
+      setInterimTranscript(voiceTranscriptRef.current || "speak now");
     };
 
     recognition.onresult = (event) => {
+      if (!isCurrentSession()) return;
       let interimText = "";
-
       for (let i = event.resultIndex; i < event.results.length; i += 1) {
         const transcript = event.results[i][0]?.transcript || "";
-
         if (event.results[i].isFinal) {
           voiceTranscriptRef.current = `${voiceTranscriptRef.current} ${transcript}`
             .replace(/\s+/g, " ")
@@ -1582,39 +1737,37 @@ export default function Chat({
           interimText += transcript;
         }
       }
-
-      setInput(
-        [voiceTranscriptRef.current, interimText]
-          .filter(Boolean)
-          .join(" ")
-          .trim()
-      );
-      setInterimTranscript(interimText);
+      const combined = [voiceTranscriptRef.current, interimText]
+        .filter(Boolean)
+        .join(" ")
+        .trim();
+      setInput(combined);
+      setInterimTranscript(interimText || combined || "speak now");
     };
 
     recognition.onerror = (event) => {
+      if (voiceSessionIdRef.current !== sessionId) return;
       if (event.error !== "no-speech" && event.error !== "aborted") {
         console.error("speech recognition error:", event.error);
       }
-
-      if (
-        event.error === "not-allowed" ||
-        event.error === "service-not-allowed"
-      ) {
+      if (event.error === "not-allowed" || event.error === "service-not-allowed") {
         setVoiceSupported(false);
+        setInterimTranscript("microphone permission is required");
+      } else {
+        setInterimTranscript("");
       }
-
+      voiceActiveRef.current = false;
       setIsListening(false);
-      setInterimTranscript("");
     };
 
     recognition.onend = () => {
+      if (voiceSessionIdRef.current !== sessionId) return;
       const transcript = voiceTranscriptRef.current.trim();
-
+      voiceActiveRef.current = false;
       setIsListening(false);
       setInterimTranscript("");
       recognitionRef.current = null;
-
+      if (transcript) setInput(transcript);
       if (continuousVoice && transcript && !isLoading) {
         voiceTranscriptRef.current = "";
         setInput("");
@@ -1625,28 +1778,56 @@ export default function Chat({
     try {
       recognition.start();
     } catch (error) {
+      if (voiceSessionIdRef.current === sessionId) {
+        voiceActiveRef.current = false;
+        setIsListening(false);
+        setInterimTranscript("");
+        recognitionRef.current = null;
+      }
       console.error("could not start speech recognition:", error);
-      setIsListening(false);
-      setInterimTranscript("");
-      recognitionRef.current = null;
     }
   }
 
   useEffect(() => {
     if (typeof window === "undefined") return undefined;
 
-    setVoiceSupported(
-      Boolean(window.SpeechRecognition || window.webkitSpeechRecognition)
-    );
+    if (Capacitor.isNativePlatform()) {
+      SpeechRecognition.available()
+        .then(({ available }) => setVoiceSupported(available))
+        .catch((error) => {
+          console.error("could not check native speech recognition:", error);
+          setVoiceSupported(false);
+        });
+    } else {
+      setVoiceSupported(
+        Boolean(window.SpeechRecognition || window.webkitSpeechRecognition)
+      );
+    }
 
     return () => {
-      if (recognitionRef.current) {
-        recognitionRef.current.stop();
-        recognitionRef.current = null;
+      voiceSessionIdRef.current += 1;
+      voiceActiveRef.current = false;
+      nativeTranscriptActiveRef.current = false;
+
+      try {
+        recognitionRef.current?.stop();
+      } catch (error) {
+        console.error("could not stop browser speech recognition:", error);
       }
-      if (window.speechSynthesis) {
-        window.speechSynthesis.cancel();
+      recognitionRef.current = null;
+
+      nativePartialListenerRef.current?.remove();
+      nativeStateListenerRef.current?.remove();
+      nativePartialListenerRef.current = null;
+      nativeStateListenerRef.current = null;
+
+      if (Capacitor.isNativePlatform()) {
+        SpeechRecognition.stop().catch((error) => {
+          console.error("could not stop native speech recognition:", error);
+        });
       }
+
+      window.speechSynthesis?.cancel();
     };
   }, []);
 
@@ -1688,13 +1869,13 @@ export default function Chat({
 
 
 
-  async function handleSend(event) {
+  async function handleSend(event, voiceTranscript = null, isVoiceTurn = false) {
 
-    event.preventDefault();
+    if (event?.preventDefault) event.preventDefault();
 
 
 
-    const value = input.trim();
+    const value = typeof voiceTranscript === "string" ? voiceTranscript.trim() : input.trim();
 
 
 
@@ -2073,31 +2254,6 @@ export default function Chat({
             }
 
       
-      if (isVoiceTurn && continuousVoice) {
-        const voiceReply = [
-          finalResponse.english,
-          voiceCoach ? finalResponse.explanation : "",
-        ]
-          .filter(Boolean)
-          .join(". ");
-
-        if (voiceReply && typeof window !== "undefined" && window.speechSynthesis) {
-          setTimeout(() => {
-            const utterance = configureKuttappuUtterance(
-              new SpeechSynthesisUtterance(voiceReply)
-            );
-
-            utterance.onend = () => {
-              if (continuousVoice) {
-                setTimeout(() => startListening(), 250);
-              }
-            };
-
-            window.speechSynthesis.cancel();
-            window.speechSynthesis.speak(utterance);
-          }, 120);
-        }
-      }
     } catch (error) {
 
             console.error(
@@ -2189,6 +2345,32 @@ export default function Chat({
       );
 
 
+
+      if (isVoiceTurn && continuousVoice) {
+        const voiceReply = [
+          finalResponse.english,
+          voiceCoach ? finalResponse.explanation : "",
+        ]
+          .filter(Boolean)
+          .join(". ");
+
+        if (voiceReply && typeof window !== "undefined" && window.speechSynthesis) {
+          setTimeout(() => {
+            const utterance = configureKuttappuUtterance(
+              new SpeechSynthesisUtterance(voiceReply)
+            );
+
+            utterance.onend = () => {
+              if (continuousVoice) {
+                setTimeout(() => startListening(), 250);
+              }
+            };
+
+            window.speechSynthesis.cancel();
+            window.speechSynthesis.speak(utterance);
+          }, 120);
+        }
+      }
 
       /* =====================================================
 
@@ -3819,6 +4001,29 @@ export default function Chat({
 
 
 
+        <style>{`
+          .voice-input-button.recording {
+            color: #ffffff !important;
+            background: #0f9f6e !important;
+            border-color: #0f9f6e !important;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, .13);
+          }
+          .voice-input-button.recording .voice-stop-icon span {
+            display: block;
+            width: 8px;
+            height: 8px;
+            border-radius: 2px;
+            background: currentColor;
+          }
+          .voice-status-premium .voice-status-dot {
+            animation: kuttappuVoicePulse 1.35s ease-in-out infinite;
+          }
+          @keyframes kuttappuVoicePulse {
+            0%, 100% { box-shadow: 0 0 0 3px rgba(16,185,129,.12); transform: scale(1); }
+            50% { box-shadow: 0 0 0 6px rgba(16,185,129,.05); transform: scale(1.12); }
+          }
+        `}</style>
+
         <div className="chat-bottom">
 
 
@@ -3866,24 +4071,6 @@ export default function Chat({
 
 
             <button
-
-              type="button"
-
-              className="input-action"
-
-              disabled={isLoading}
-
-              title="attach"
-
-            >
-
-              ♧
-
-            </button>
-
-
-
-            <button
               type="button"
               className={`input-action voice-input-button ${
                 isListening ? "recording" : ""
@@ -3891,15 +4078,15 @@ export default function Chat({
               disabled={isLoading || !voiceSupported}
               title={
                 !voiceSupported
-                  ? "voice input is not supported in this browser"
+                  ? "speech recognition unavailable"
                   : isListening
-                  ? "stop recording"
-                  : "speak"
+                  ? "stop voice input"
+                  : "start voice input"
               }
               aria-label={
                 isListening ? "stop voice input" : "start voice input"
               }
-              onClick={isListening ? stopListening : startListening}
+              onClick={startListening}
             >
               {isListening ? (
                 <span className="voice-stop-icon" aria-hidden="true">
@@ -3918,40 +4105,6 @@ export default function Chat({
                 </svg>
               )}
             </button>
-
-            <button
-              type="button"
-              className={`voice-mode-button ${continuousVoice ? "active" : ""}`}
-              disabled={isLoading || !voiceSupported}
-              title={continuousVoice ? "turn off continuous voice" : "turn on continuous voice"}
-              aria-label={continuousVoice ? "turn off continuous voice" : "turn on continuous voice"}
-              onClick={() => {
-                const next = !continuousVoice;
-                setContinuousVoice(next);
-                if (next && !isListening) {
-                  setTimeout(() => startListening(), 50);
-                }
-                if (!next) {
-                  stopListening();
-                  stopSpeaking();
-                }
-              }}
-            >
-              ∞
-            </button>
-
-            <button
-              type="button"
-              className={`voice-coach-button ${voiceCoach ? "active" : ""}`}
-              disabled={isLoading}
-              title={voiceCoach ? "speaking coach on" : "speaking coach off"}
-              aria-label={voiceCoach ? "speaking coach on" : "speaking coach off"}
-              onClick={() => setVoiceCoach((current) => !current)}
-            >
-              ✓
-            </button>
-
-
 
             <button
 
@@ -3976,23 +4129,64 @@ export default function Chat({
           </form>
 
           {isListening && (
-            <div className="voice-status" role="status" aria-live="polite">
-              <span className="voice-status-dot" />
-              <span>listening... {interimTranscript || "speak now"}</span>
-              <button type="button" onClick={stopListening}>stop</button>
-            </div>
-          )}
-
-          {(continuousVoice || voiceCoach) && !isListening && (
-            <div className="voice-mode-status" role="status">
-              {continuousVoice && <span>continuous voice on</span>}
-              {voiceCoach && <span>speaking coach on</span>}
+            <div
+              className="voice-status voice-status-premium"
+              role="status"
+              aria-live="polite"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "9px",
+                margin: "8px 4px 0",
+                padding: "9px 12px",
+                borderRadius: "14px",
+                border: "1px solid rgba(16, 185, 129, 0.22)",
+                background: "linear-gradient(135deg, rgba(16,185,129,.10), rgba(16,185,129,.04))",
+                color: "#087f5b",
+                fontSize: "12px",
+                minWidth: 0,
+              }}
+            >
+              <span
+                className="voice-status-dot"
+                style={{
+                  display: "inline-block",
+                  flex: "0 0 8px",
+                  width: "8px",
+                  height: "8px",
+                  borderRadius: "50%",
+                  background: "#10b981",
+                  boxShadow: "0 0 0 4px rgba(16,185,129,.13)",
+                }}
+              />
+              <span style={{ flex: 1, minWidth: 0, overflowWrap: "anywhere" }}>
+                {voiceTranscriptRef.current || interimTranscript
+                  ? `hearing: ${interimTranscript || voiceTranscriptRef.current}`
+                  : "listening — speak now"}
+              </span>
+              <button
+                type="button"
+                onClick={stopListening}
+                style={{
+                  border: 0,
+                  borderRadius: "9px",
+                  padding: "6px 10px",
+                  background: "#087f5b",
+                  color: "#fff",
+                  fontWeight: 600,
+                  fontSize: "12px",
+                  cursor: "pointer",
+                  flexShrink: 0,
+                }}
+              >
+                stop
+              </button>
             </div>
           )}
 
           {!voiceSupported && (
             <p className="voice-support-note">
-              voice input is not supported in this browser. try google chrome or microsoft edge.
+              voice input is unavailable. check microphone permission and speech recognition service, then reopen the app.
             </p>
           )}
 
