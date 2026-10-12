@@ -7,6 +7,7 @@ import kuttappu from "./assets/kuttappu-avatar.png";
 import { supabase } from "./supabase";
 
 import { SpeechRecognition } from '@capacitor-community/speech-recognition';
+import { TextToSpeech } from '@capacitor-community/text-to-speech';
 
 import { Capacitor } from '@capacitor/core';
 
@@ -1437,9 +1438,12 @@ export default function Chat({
      ========================================================= */
 
   function stopSpeaking() {
-    if (typeof window === "undefined" || !window.speechSynthesis) return;
-
-    window.speechSynthesis.cancel();
+    if (Capacitor.isNativePlatform()) {
+      TextToSpeech.stop().catch((error) => console.warn("could not stop native speech:", error));
+    }
+    if (typeof window !== "undefined" && window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
     setSpeakingMessageIndex(null);
   }
 
@@ -1506,18 +1510,38 @@ export default function Chat({
     return utterance;
   }
 
-  function speakText(text, messageIndex = null) {
-    if (typeof window === "undefined" || !window.speechSynthesis) {
-      console.warn("speech synthesis is not supported in this browser");
-      return;
-    }
-
+  async function speakText(text, messageIndex = null) {
     const cleanText = String(text || "")
       .replace(/[*_#]/g, "")
       .replace(/\s+/g, " ")
       .trim();
-
     if (!cleanText) return;
+
+    if (Capacitor.isNativePlatform()) {
+      try {
+        await TextToSpeech.stop();
+        setSpeakingMessageIndex(messageIndex);
+        await TextToSpeech.speak({
+          text: cleanText,
+          lang: "en-IN",
+          rate: 0.92,
+          pitch: 1.1,
+          volume: 1.0,
+          category: "ambient",
+        });
+      } catch (error) {
+        console.error("native Kuttappu voice failed:", error);
+        setSpeakingMessageIndex(null);
+      } finally {
+        setSpeakingMessageIndex(null);
+      }
+      return;
+    }
+
+    if (typeof window === "undefined" || !window.speechSynthesis || typeof SpeechSynthesisUtterance === "undefined") {
+      console.warn("speech synthesis is not supported in this browser");
+      return;
+    }
 
     if (window.speechSynthesis.speaking) {
       window.speechSynthesis.cancel();
@@ -1527,14 +1551,10 @@ export default function Chat({
       }
     }
 
-    const utterance = configureKuttappuUtterance(
-      new SpeechSynthesisUtterance(cleanText)
-    );
-
+    const utterance = configureKuttappuUtterance(new SpeechSynthesisUtterance(cleanText));
     utterance.onstart = () => setSpeakingMessageIndex(messageIndex);
     utterance.onend = () => setSpeakingMessageIndex(null);
     utterance.onerror = () => setSpeakingMessageIndex(null);
-
     window.speechSynthesis.speak(utterance);
   }
 

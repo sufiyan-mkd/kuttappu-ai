@@ -538,30 +538,21 @@ app.post(
       // SAVE USER MESSAGE
       // =================================================
 
-      await saveChatMessage(
-        supabase,
-        user.id,
-        {
+      // Save the incoming message and load memories concurrently to reduce
+      // pre-generation latency without changing the existing chat workflow.
+      const [, loadedMemories] = await Promise.all([
+        saveChatMessage(supabase, user.id, {
           type: "user",
           mode,
-          malayalam:
-            latestUserMessage.malayalam ||
-            "",
+          malayalam: latestUserMessage.malayalam || "",
           english: "",
           explanation: "",
           example: "",
-        }
-      );
+        }),
+        getMemories(supabase, user.id),
+      ]);
 
-      // =================================================
-      // LOAD MEMORIES
-      // =================================================
-
-      let memories =
-        await getMemories(
-          supabase,
-          user.id
-        );
+      let memories = loadedMemories;
 
       // =================================================
       // DETECT + SAVE NEW MEMORY
@@ -793,40 +784,21 @@ Rules:
         });
       }
 
-      const stream =
-        await ai.models.generateContentStream(
-          {
-            model:
-              "gemini-3.5-flash-lite",
-            contents: instructions,
-          }
-        );
-
-      // =================================================
-      // SSE HEADERS
-      // =================================================
-
-      res.setHeader(
-        "Content-Type",
-        "text/event-stream"
-      );
-
-      res.setHeader(
-        "Cache-Control",
-        "no-cache"
-      );
-
-      res.setHeader(
-        "Connection",
-        "keep-alive"
-      );
-
-      res.setHeader(
-        "Access-Control-Allow-Origin",
-        "*"
-      );
-
+      // Start the SSE response before waiting for Gemini's first token so
+      // the client can enter its streaming state immediately.
+      res.setHeader("Content-Type", "text/event-stream; charset=utf-8");
+      res.setHeader("Cache-Control", "no-cache, no-transform");
+      res.setHeader("Connection", "keep-alive");
+      res.setHeader("X-Accel-Buffering", "no");
+      res.setHeader("Access-Control-Allow-Origin", "*");
       responseStarted = true;
+      if (typeof res.flushHeaders === "function") res.flushHeaders();
+      res.write(": connected\\n\\n");
+
+      const stream = await ai.models.generateContentStream({
+        model: "gemini-3.5-flash-lite",
+        contents: instructions,
+      });
 
       // =================================================
       // STREAM GEMINI RESPONSE
@@ -1134,7 +1106,7 @@ Return ONLY valid JSON with exactly this shape:
       },
     };
 
-    return res.json({ result: normalized });
+    // Flat fields match VoiceTutor.jsx; nested result remains for compatibility.\n    return res.json({ ...normalized, result: normalized });
   } catch (error) {
     console.error("❌ voice tutor error:", error);
     return res.status(500).json({

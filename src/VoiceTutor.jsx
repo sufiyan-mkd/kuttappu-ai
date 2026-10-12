@@ -5,6 +5,7 @@ import { supabase } from "./supabase";
 import { trackSpeakingProgress } from "./taskTracker";
 import { Capacitor } from "@capacitor/core";
 import { SpeechRecognition } from "@capacitor-community/speech-recognition";
+import { TextToSpeech } from "@capacitor-community/text-to-speech";
 
 const API_BASE = "https://kuttappu-ai.onrender.com";
 
@@ -46,7 +47,7 @@ export default function VoiceTutor({ user, onBack }) {
         }
       } else {
         const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (mounted) setSupported(Boolean(SR && window.speechSynthesis));
+        if (mounted) setSupported(Boolean(SR));
       }
     }
 
@@ -60,22 +61,52 @@ export default function VoiceTutor({ user, onBack }) {
         SpeechRecognition.stop().catch(() => {});
         nativeListenerRefs.current.forEach((listener) => listener?.remove?.());
         nativeListenerRefs.current = [];
+        TextToSpeech.stop().catch(() => {});
       }
       window.speechSynthesis?.cancel();
     };
   }, []);
 
-  function say(text, thenListen = false) {
-    if (!window.speechSynthesis || !text) return;
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(String(text).replace(/[*_#]/g, ""));
-    utterance.lang = "en-IN";
-    utterance.rate = 0.92;
-    utterance.pitch = 1.02;
-    utterance.onend = () => {
-      if (thenListen && activeRef.current) window.setTimeout(startListening, 250);
-    };
-    window.speechSynthesis.speak(utterance);
+  async function say(text, thenListen = false) {
+    const cleanText = String(text || "").replace(/[*_#]/g, " ").replace(/\s+/g, " ").trim();
+    if (!cleanText) return;
+
+    try {
+      if (Capacitor.isNativePlatform()) {
+        // Android WebView may not expose speechSynthesis. Use native Android TTS.
+        try { await TextToSpeech.stop(); } catch {}
+        await TextToSpeech.speak({
+          text: cleanText,
+          lang: "en-IN",
+          rate: 0.92,
+          pitch: 1.02,
+          volume: 1.0,
+          category: "ambient",
+        });
+      } else {
+        if (!window.speechSynthesis || typeof SpeechSynthesisUtterance === "undefined") {
+          setNotice("voice output is not supported in this browser. use chrome or edge.");
+          return;
+        }
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(cleanText);
+        utterance.lang = "en-IN";
+        utterance.rate = 0.92;
+        utterance.pitch = 1.02;
+        await new Promise((resolve) => {
+          utterance.onend = resolve;
+          utterance.onerror = resolve;
+          window.speechSynthesis.speak(utterance);
+        });
+      }
+    } catch (error) {
+      console.error("kuttappu text-to-speech failed:", error);
+      setNotice("voice output failed. check that android text-to-speech is installed and enabled.");
+    }
+
+    if (thenListen && activeRef.current && !busyRef.current) {
+      window.setTimeout(() => startListening(), 350);
+    }
   }
 
   async function startListening() {
@@ -90,7 +121,15 @@ export default function VoiceTutor({ user, onBack }) {
           receivePermission = requested?.speechRecognition;
         }
         if (receivePermission !== "granted") {
-          setNotice("speech recognition permission is required. allow it in android app settings.");
+          setNotice("microphone permission is required. allow it in android app settings.");
+          setListening(false);
+          return;
+        }
+
+        const availability = await SpeechRecognition.available();
+        if (!availability?.available) {
+          setNotice("speech recognition is unavailable. install or enable google speech services on android.");
+          setSupported(false);
           setListening(false);
           return;
         }
@@ -100,29 +139,28 @@ export default function VoiceTutor({ user, onBack }) {
         setListening(true);
         setNotice("listening — speak in english");
 
-        // Register listeners once. Android speech recognition returns results through events.
-        if (nativeListenerRefs.current.length === 0) {
-          const partialListener = await SpeechRecognition.addListener("partialResults", (event) => {
-            const match = event?.matches?.[0]?.trim() || "";
-            if (match) {
-              transcriptRef.current = match;
-              setTranscript(match);
-            }
-          });
-
-          const stateListener = await SpeechRecognition.addListener("listeningState", (event) => {
-            if (event?.status !== "stopped") return;
-            setListening(false);
-            const spokenText = transcriptRef.current.trim();
-            if (spokenText && activeRef.current && !busyRef.current) {
-              processSpeech(spokenText);
-            } else if (activeRef.current && !busyRef.current) {
-              window.setTimeout(() => startListening(), 400);
-            }
-          });
-
-          nativeListenerRefs.current = [partialListener, stateListener];
-        }
+        // Keep partial results as they arrive. The plugin's start() promise does
+        // not reliably return a matches array on Android, so don't depend on it.
+        nativeListenerRefs.current.forEach((listener) => listener?.remove?.());
+        nativeListenerRefs.current = [];
+        const partialListener = await SpeechRecognition.addListener("partialResults", (event) => {
+          const spokenText = event?.matches?.[0]?.trim() || "";
+          if (!spokenText || !activeRef.current || busyRef.current) return;
+          transcriptRef.current = spokenText;
+          setTranscript(spokenText);
+        });
+        const stateListener = await SpeechRecognition.addListener("listeningState", (event) => {
+          if (event?.status !== "stopped") return;
+          setListening(false);
+          const spokenText = transcriptRef.current.trim();
+          if (spokenText && activeRef.current && !busyRef.current) {
+            processSpeech(spokenText);
+          } else if (activeRef.current && !busyRef.current) {
+            setNotice("i couldn't hear that clearly. please speak again.");
+            window.setTimeout(() => startListening(), 700);
+          }
+        });
+        nativeListenerRefs.current = [partialListener, stateListener];
 
         await SpeechRecognition.start({
           language: "en-IN",
@@ -136,7 +174,7 @@ export default function VoiceTutor({ user, onBack }) {
         if (/permission|denied|not allowed/i.test(message)) {
           setNotice("speech recognition permission is blocked. allow microphone and speech recognition in android settings.");
         } else {
-          setNotice(`could not start speech recognition: ${message || "please try again"}`);
+          setNotice(`speech recognition failed: ${message || "check microphone access and google speech services"}`);
         }
       }
       return;
@@ -252,6 +290,9 @@ export default function VoiceTutor({ user, onBack }) {
       try { await SpeechRecognition.stop(); } catch {}
     }
     window.speechSynthesis?.cancel();
+    if (Capacitor.isNativePlatform()) { try { await TextToSpeech.stop(); } catch {} }
+    nativeListenerRefs.current.forEach((listener) => listener?.remove?.());
+    nativeListenerRefs.current = [];
     setListening(false);
     setNotice("speaking session stopped");
     if (user?.id && startedAt) {
